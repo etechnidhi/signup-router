@@ -1,24 +1,27 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import { mapGetters } from "vuex";
 export default {
-  name: 'app',
-  components: {
-    HelloWorld
+  name: "app",
+  computed: {
+    ...mapGetters(["isLoggedIn"])
+  },
+  mounted: function() {
+    if (this.isLoggedIn) {
+      this.$router.push("/profile");
+    }
   }
-}
+};
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
