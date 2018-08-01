@@ -1,20 +1,20 @@
 <template>
-    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                Home
-            </div>
-            <div class="navbar-menu">
-                <div class="navbar-end">
-                    <div class="navbar-item">
-                      <a @click="signup" v-if="!isLoggedIn" class="button is-primary">Signup</a> &nbsp; &nbsp; &nbsp;
-                        <a @click="login" v-if="!isLoggedIn" class="button is white">Login</a>
-                        <a @click="logout" v-if="isLoggedIn" class="button is white">Logout</a>
-                    </div>
-                </div>
-            </div>
+  <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <div class="navbar-item">
+        Home
+      </div>
+      <div class="navbar-menu">
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <a @click="signup" v-if="!isLoggedIn" class="button is-primary">Signup</a> &nbsp; &nbsp; &nbsp;
+            <a @click="login" v-if="!isLoggedIn" class="button is white">Login</a>
+            <a @click="logout" v-if="isLoggedIn" class="button is white">Logout</a>
+          </div>
         </div>
-    </nav>
+      </div>
+    </div>
+  </nav>
 </template>
 
 <script>
@@ -38,7 +38,7 @@ export default {
       this.dologout();
       this.$router.push("/");
     },
-    signup:function(){
+    signup: function() {
       this.$router.push("signup");
     }
   }

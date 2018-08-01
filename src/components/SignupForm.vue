@@ -1,39 +1,62 @@
 <template>
-    <div id="submitForm">
-        <section>
-            <div class="field">
-                <b-field label="Username" :type="errors.has('username') ? 'is-danger': ''" :message="errors.has('username') ? errors.first('username') : ''">
-                    <input class="input" name="username" type="text" placeholder="Email input" v-validate="'required|alpha|min:3'" v-model="username">
-                </b-field>
-            </div>
-            <div class="field">
-                <b-field label="Email" :type="errors.has('email') ? 'is-danger': ''" :message="errors.has('email') ? errors.first('email') : ''">
-                    <input class="input" name="email" type="text" placeholder="Email" v-validate="'required|email'" v-model="email">
-                </b-field>
-            </div>
-            <div class="field">
-                <b-field label="Password" :type="errors.has('password') ? 'is-danger': ''" :message="errors.has('password') ? errors.first('password') : ''">
-                    <input class="input" name="password" type="password" v-validate="'required|min:6|max:16'" placeholder="Password" v-model="password">
-                </b-field>
-            </div>
-            <div class="field">
-                <b-field label="Confirm Password" :type="errors.has('conf-password') ? 'is-danger': ''" :message="errors.has('conf-password') ? errors.first('conf-password') : ''">
-                    <input class="input" name="conf-password" type="password" v-validate="'required|min:6|max:16'" placeholder="Confirm Password">
-                </b-field>
-            </div>
-            <div class="field">
-                <button class="button is-primary" :disabled="errors.any()" v-on:click="submit">Register</button>
-            </div>
-    
-        </section>
-    </div>
+  <div id="submitForm">
+    <section>
+      <div class="field">
+        <b-field label="Username" :type="errors.has('username') ? 'is-danger': ''" :message="errors.has('username') ? errors.first('username') : ''">
+          <input class="input" name="username" type="text" placeholder="Email input" v-validate="'required|alpha|min:3'" v-model="username">
+        </b-field>
+      </div>
+      <div class="field">
+        <b-field label="Email" :type="errors.has('email') ? 'is-danger': ''" :message="errors.has('email') ? errors.first('email') : ''">
+          <input class="input" name="email" type="text" placeholder="Email" v-validate="'required|email'" v-model="email">
+        </b-field>
+      </div>
+      <div class="field">
+        <b-field label="Password" :type="errors.has('password') ? 'is-danger': ''" :message="errors.has('password') ? errors.first('password') : ''">
+          <input class="input" name="password" type="password" v-validate="'required|min:6|max:16'" placeholder="Password" v-model="password">
+        </b-field>
+      </div>
+      <div class="field">
+        <b-field label="Confirm Password" :type="errors.has('conf-password') ? 'is-danger': ''" :message="errors.has('conf-password') ? errors.first('conf-password') : ''">
+          <input class="input" name="conf-password" type="password" v-validate="'required|min:6|max:16'" placeholder="Confirm Password">
+        </b-field>
+      </div>
+      <div class="field">
+        <button class="button is-primary" :disabled="errors.any()" v-on:click="submit" :class="{ 'button': true, 'is-full' : true, 'is-loading' : login_progress}">Register</button>
+      </div>
+  
+    </section>
+  </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
+// eslint-disable-next-line
 let count = 0;
 export default {
   name: "SignupForm",
+  watch: {
+    error_message: function(val) {
+      if (val) {
+        this.$snackbar.open({
+          duration: 5000,
+          message: "Signup Failed " + val.message,
+          type: "is-danger",
+          position: "is-bottom-left"
+        });
+      }
+    }
+  },
   computed: {
+    ...mapGetters({
+      user: "getUser"
+    }),
+    login_progress: function() {
+      return this.$store.state.login.login_progress;
+    },
+    error_message: function() {
+      return this.$store.state.login.error;
+    },
     id: {
       get: function() {
         return this.$store.state.login.id;
@@ -68,9 +91,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["addusers"]),
     submit: function() {
       this.id = count++;
-      this.$store.commit("adduser", {
+      this.addusers({
         id: count,
         username: this.$store.state.login.username,
         email: this.$store.state.login.email,

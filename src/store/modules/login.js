@@ -1,3 +1,5 @@
+import Axios from "axios";
+
 export default {
   state: {
     users: [],
@@ -5,24 +7,59 @@ export default {
     username: "",
     email: "",
     password: "",
-    user: {}
+    user: {},
+    error: false,
+    login_progress: false
   },
   getters: {
     getUser: state => state.user,
     isLoggedIn: state => (state.user.username ? true : false)
   },
   actions: {
-    login({ commit }, payload) {
-      commit("login", payload);
-      commit("updateEmail", "");
-      commit("updatePassword", "");
+    async login({ commit }, payload) {
+      // eslint-disable-next-line
+      console.log("dsadsadsadsadsadsaddsadsa");
+      try {
+        commit("login_progress", true);
+        const response = await Axios.post(
+          "https://reqres.in/api/login",
+          payload
+        );
+        delete payload.password;
+        payload.token = response;
+        commit("login", payload);
+        commit("updateUsername", "");
+        commit("updatePassword", "");
+        commit("login_progress", false);
+      } catch (err) {
+        commit("login_progress", false);
+        commit("login_fail", err);
+      }
     },
     logout({ commit }) {
       commit("logout");
+    },
+    async addusers({ commit }, payload) {
+      try {
+        commit("login_progress", true);
+        const response = await Axios.post(
+          "https://reqres.in/api/register",
+          payload
+        );
+        payload.token = response;
+        commit("adduser", payload);
+        commit("updateUsername", "");
+        commit("updatePassword", "");
+        commit("login_progress", false);
+      } catch (err) {
+        commit("login_progress", false);
+        commit("login_fail", err);
+      }
     }
   },
   mutations: {
     login: (state, data) => {
+      state.user = data;
       for (var i = 0; i < state.users.length; i++) {
         if (
           state.users[i]["username"] === data.username &&
@@ -34,6 +71,12 @@ export default {
           console.log("Email or password doesn't match");
         }
       }
+    },
+    login_fail: (state, data) => {
+      state.error = data;
+    },
+    login_progress: (state, data) => {
+      state.login_progress = data;
     },
     logout: state => {
       state.user = {};

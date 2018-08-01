@@ -2,18 +2,18 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <li class="nav-item active">
-                    <a class="button is-link">Link</a>
-                </li>
+      <a class="button is-link">Link</a>
+    </li>
   </div>
 </template>
 
 <script>
   export default {
     name: "Hello",
-    data(){
-      return{
-        msg: 'WELCOME TO ROUTER RELATED APP'
-      }
+    data() {
+      return {
+        msg: "WELCOME TO ROUTER RELATED APP"
+      };
     }
   };
 </script>
