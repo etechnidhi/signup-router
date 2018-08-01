@@ -58,9 +58,6 @@ export default {
     }
   },
   mutations: {
-    simple :(state) => {
-      state.count++
-    },
     login: (state, data) => {
       state.user = data;
       for (var i = 0; i < state.users.length; i++) {
