@@ -9,11 +9,9 @@
             </section>
             <section>
                 <div class="columns">
-                    <div class="column"></div>
                     <div class="column">
                         <SignupForm/>
                     </div>
-                    <div class="column"></div>
                 </div>
             </section>
         </div>
@@ -21,33 +19,33 @@
 </template>
 
 <script>
-import Header from "./../components/Header";
-import SignupForm from "./../components/SignupForm";
-export default {
-  name: "Signup",
-  components: {
-    Header,
-    SignupForm
-  }
-};
+    import Header from "./../components/Header";
+    import SignupForm from "./../components/SignupForm";
+    export default {
+        name: "Signup",
+        components: {
+            Header,
+            SignupForm
+        }
+    };
 </script>
 
 <style>
-.box {
-  margin: 0 auto;
-  width: 70% !important;
-  margin-top: 50px !important;
-  border: 2px solid grey;
-}
-
-.heading1 {
-  padding-top: 15px;
-  padding-bottom: 15px;
-  font-size: 25px;
-}
-
-.columns {
-  margin-top: 15px !important;
-  margin-bottom: 15px !important;
-}
+    .box {
+        margin: 0 auto;
+        width: 70% !important;
+        margin-top: 50px !important;
+        border: 2px solid grey;
+    }
+    
+    .heading1 {
+        padding-top: 15px;
+        padding-bottom: 15px;
+        font-size: 25px;
+    }
+    
+    .columns {
+        margin-top: 15px !important;
+        margin-bottom: 15px !important;
+    }
 </style>
