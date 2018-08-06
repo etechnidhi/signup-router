@@ -10,7 +10,6 @@
                     <h2>Welcome :)</h2>
                     <br/>
                     <div id="buttons">
-    
                         <div class="field is-grouped">
                             <p class="control">
                                 <a @click="list" v-if="isLoggedIn" class="button is-info is-focused is-dark">List</a>
@@ -18,10 +17,12 @@
                             <p class="control">
                                 <a @click="add" v-if="isLoggedIn" class="button is-warning is-focused">Add Poll</a>
                             </p>
+                            <p class="control">
+                                <a @click="listpoll" v-if="isLoggedIn" class="button is-warning is-focused">Poll List</a>
+                            </p>
                         </div>
                     </div>
                 </div>
-    
             </div>
         </section>
     </div>
@@ -42,13 +43,16 @@ export default {
       isLoggedIn: "isLoggedIn"
     })
   },
-  methods:{
-      list: function(){
-          this.$router.push("list");
-      },
-            add: function(){
-          this.$router.push("addpoll");
-      }
+  methods: {
+    list: function() {
+      this.$router.push("list");
+    },
+    add: function() {
+      this.$router.push("addpoll");
+    },
+    listpoll : function(){
+        this.$router.push("pollList")
+    }
   }
 };
 </script>
@@ -56,7 +60,7 @@ export default {
 <style>
 #buttons {
   /* margin: 0 auto; */
-  margin-left: 450px;
+  margin-left: 400px;
   width: 60%;
 }
 

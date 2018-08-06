@@ -6,6 +6,7 @@ import Profile from "./pages/Profile.vue";
 import Signup from "./pages/Signup.vue";
 import List from "./pages/List.vue";
 import AddPoll from "./pages/AddPoll.vue";
+import ListPoll from "./pages/ListPoll.vue";
 import Buefy from "buefy";
 import VueRouter from "vue-router";
 import Bulma from "bulma";
@@ -25,7 +26,8 @@ const routes = [
   { path: "/profile", component: Profile },
   { path: "/signup", component: Signup },
   { path: "/list", component :List},
-  { path: "/addpoll", component : AddPoll}
+  { path: "/addpoll", component : AddPoll},
+  { path: "/pollList", component : ListPoll}
 ];
 const router = new VueRouter({
   routes

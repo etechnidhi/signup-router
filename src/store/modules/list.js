@@ -15,15 +15,21 @@ export default {
   actions: {
     async showlist({ commit }, payload) {
       const responseData = await Axios.get(
-        "http://192.168.1.116:8000/list_users",
+        "http://192.168.1.7:8000/list_users",
         {
           headers: {
             api_token: payload.token
           }
         }
       ).then(response => (this.info = response));
-      this.state.userslist = responseData.data.data;
+      commit("list",responseData);
+      // this.state.userslist = responseData.data.data;
       this.state.userlist = true;
+    }
+  },
+  mutations:{
+    list: (state,data)=>{
+      state.userslist = data.data.data;
     }
   }
 };

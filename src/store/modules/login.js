@@ -25,7 +25,7 @@ export default {
       try {
         commit("login_progress", true);
         const response = await Axios.post(
-          "http://192.168.1.116:8000/login",
+          "http://192.168.1.7:8000/login",
           payload
         );
         delete payload.password;
@@ -52,7 +52,7 @@ export default {
       try {
         commit("login_progress", true);
         const response = await Axios.post(
-          "http://192.168.1.116:8000/add_user",
+          "http://192.168.1.7:8000/add_user",
           payload
         );
         payload.token = response;
