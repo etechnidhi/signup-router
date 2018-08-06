@@ -2,8 +2,8 @@
   <div id="submitForm">
     <section>
       <div class="field">
-        <b-field label="Username" :type="errors.has('username') ? 'is-danger': ''" :message="errors.has('username') ? errors.first('username') : ''">
-          <input class="input" name="username" type="text" placeholder="Email input" v-validate="'required|alpha|min:3'" v-model="username">
+        <b-field label="name" :type="errors.has('name') ? 'is-danger': ''" :message="errors.has('name') ? errors.first('name') : ''">
+          <input class="input" name="name" type="text" placeholder="Email input" v-validate="'required|alpha|min:3'" v-model="name">
         </b-field>
       </div>
       <div class="field">
@@ -22,6 +22,11 @@
         </b-field>
       </div>
       <div class="field">
+        <b-field label="Role" :type="errors.has('role') ? 'is-danger': ''" :message="errors.has('role') ? errors.first('role') : ''">
+          <input class="input" name="role" type="text" v-validate="'required|alpha'" placeholder="Enter Role" v-model="role">
+        </b-field>
+      </div>
+      <div class="field">
         <button class="button is-primary" :disabled="errors.any()" v-on:click="submit" :class="{ 'button': true, 'is-full' : true, 'is-loading' : login_progress}">Register</button>
       </div>
   
@@ -31,23 +36,30 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-// eslint-disable-next-line
+import { mapFields } from "vuex-map-fields";
+
 let count = 0;
 export default {
   name: "SignupForm",
   watch: {
+    user: function(val) {      
+      if (val) {
+        this.$router.push("login");
+      }
+    },
     error_message: function(val) {
       if (val) {
         this.$snackbar.open({
           duration: 5000,
           message: "Signup Failed " + val.message,
           type: "is-danger",
-          position: "is-bottom-left"
+          position: "is-top-left"
         });
       }
     }
   },
   computed: {
+    ...mapFields(["id", "name", "email", "password", "role"]),
     ...mapGetters({
       user: "getUser"
     }),
@@ -56,38 +68,6 @@ export default {
     },
     error_message: function() {
       return this.$store.state.login.error;
-    },
-    id: {
-      get: function() {
-        return this.$store.state.login.id;
-      },
-      set: function(val) {
-        this.$store.commit("updateId", val);
-      }
-    },
-    username: {
-      get: function() {
-        return this.$store.state.login.username;
-      },
-      set: function(val) {
-        this.$store.commit("updateUsername", val);
-      }
-    },
-    email: {
-      get: function() {
-        return this.$store.state.login.email;
-      },
-      set: function(val) {
-        this.$store.commit("updateEmail", val);
-      }
-    },
-    password: {
-      get: function() {
-        return this.$store.state.login.password;
-      },
-      set: function(val) {
-        this.$store.commit("updatePassword", val);
-      }
     }
   },
   methods: {
@@ -96,12 +76,11 @@ export default {
       this.id = count++;
       this.addusers({
         id: count,
-        username: this.$store.state.login.username,
+        name: this.$store.state.login.name,
         email: this.$store.state.login.email,
-        password: this.$store.state.login.password
+        password: this.$store.state.login.password,
+        role:this.$store.state.login.role
       });
-      this.$store.commit("blankform", "");
-      this.$router.push("/");
     }
   }
 };

@@ -2,8 +2,8 @@
   <div id="submitForm">
     <section>
       <div class="field">
-        <b-field label="Username" :type="errors.has('username') ? 'is-danger': ''" :message="errors.has('username') ? errors.first('username') : ''">
-          <input class="input" name="username" type="text" placeholder="Email input" v-validate="'required|alpha|min:3'" v-model="username" value="hello@">
+        <b-field label="Email" :type="errors.has('email') ? 'is-danger': ''" :message="errors.has('email') ? errors.first('email') : ''">
+          <input class="input" name="email" type="text" placeholder="Email input" v-validate="'required|email'" v-model="email">
         </b-field>
       </div>
       <div class="field">
@@ -14,18 +14,20 @@
       <div class="field">
         <button class="button is-success" :disabled="errors.any()" v-on:click="loginClick" :class="{ 'button': true, 'is-full' : true, 'is-loading' : login_progress}">Login</button>
       </div>
-  
     </section>
   </div>
+  
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import { mapFields } from "vuex-map-fields";
+
 export default {
   name: "Form",
   watch: {
     user: function(val) {
-      if (val.username) {
+      if (val.email) {
         this.$router.push("profile");
       }
     },
@@ -41,8 +43,10 @@ export default {
     }
   },
   computed: {
+     ...mapFields([ "email", "password"]),
     ...mapGetters({
-      user: "getUser"
+      user: "getUser",
+      isLoggedIn: "isLoggedIn"
     }),
     login_progress: function() {
       return this.$store.state.login.login_progress;
@@ -50,28 +54,12 @@ export default {
     error_message: function() {
       return this.$store.state.login.error;
     },
-    username: {
-      get: function() {
-        return this.$store.state.login.username;
-      },
-      set: function(val) {
-        this.$store.commit("updateUsername", val);
-      }
-    },
-    password: {
-      get: function() {
-        return this.$store.state.login.password;
-      },
-      set: function(val) {
-        this.$store.commit("updatePassword", val);
-      }
-    }
   },
   methods: {
     ...mapActions(["login"]),
     loginClick: function() {
       this.login({
-        username: this.username,
+        email: this.email,
         password: this.password
       });
     }

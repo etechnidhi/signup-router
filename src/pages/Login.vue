@@ -9,11 +9,9 @@
             </section>
             <section>
                 <div class="columns">
-                    <div class="column"></div>
                     <div class="column">
                         <Form/>
                     </div>
-                    <div class="column"></div>
                 </div>
             </section>
         </div>
