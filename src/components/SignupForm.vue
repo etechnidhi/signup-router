@@ -36,7 +36,8 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-// eslint-disable-next-line
+import { mapFields } from "vuex-map-fields";
+
 let count = 0;
 export default {
   name: "SignupForm",
@@ -58,6 +59,7 @@ export default {
     }
   },
   computed: {
+    ...mapFields(["id", "name", "email", "password", "role"]),
     ...mapGetters({
       user: "getUser"
     }),
@@ -66,46 +68,6 @@ export default {
     },
     error_message: function() {
       return this.$store.state.login.error;
-    },
-    id: {
-      get: function() {
-        return this.$store.state.login.id;
-      },
-      set: function(val) {
-        this.$store.commit("updateId", val);
-      }
-    },
-    name: {
-      get: function() {
-        return this.$store.state.login.name;
-      },
-      set: function(val) {
-        this.$store.commit("updatename", val);
-      }
-    },
-    email: {
-      get: function() {
-        return this.$store.state.login.email;
-      },
-      set: function(val) {
-        this.$store.commit("updateEmail", val);
-      }
-    },
-    password: {
-      get: function() {
-        return this.$store.state.login.password;
-      },
-      set: function(val) {
-        this.$store.commit("updatePassword", val);
-      }
-    },
-    role:{
-      get:function() {
-        return this.$store.state.login.role;
-      },
-      set: function(val){
-        this.$store.commit("updateRole",val);
-      }
     }
   },
   methods: {

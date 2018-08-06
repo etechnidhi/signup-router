@@ -1,6 +1,15 @@
 <template>
     <div id="addpoll">
         <Header/>
+        <aside>
+            <ul class="menu-list is-primary">
+                <li>
+                    <a href="#" v-on:click="back">
+                        Get Back To Your Profile
+                    </a>
+                </li>
+            </ul>
+        </aside>
         <div class="box">
             <section class="hero is-primary is-medium">
                 <div class="heading1 has-text-dark has-text-centered">
@@ -28,6 +37,11 @@ export default {
     components:{
         Header,
         AddPollForm
+    },
+    methods:{
+        back:function(){
+                this.$router.push("profile");
+            }
     }
 }
 </script>

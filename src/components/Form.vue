@@ -21,6 +21,8 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import { mapFields } from "vuex-map-fields";
+
 export default {
   name: "Form",
   watch: {
@@ -41,6 +43,7 @@ export default {
     }
   },
   computed: {
+     ...mapFields([ "email", "password"]),
     ...mapGetters({
       user: "getUser",
       isLoggedIn: "isLoggedIn"
@@ -51,22 +54,6 @@ export default {
     error_message: function() {
       return this.$store.state.login.error;
     },
-    email: {
-      get: function() {
-        return this.$store.state.login.email;
-      },
-      set: function(val) {
-        this.$store.commit("updateEmail", val);
-      }
-    },
-    password: {
-      get: function() {
-        return this.$store.state.login.password;
-      },
-      set: function(val) {
-        this.$store.commit("updatePassword", val);
-      }
-    }
   },
   methods: {
     ...mapActions(["login"]),

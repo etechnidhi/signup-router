@@ -1,4 +1,5 @@
 import Axios from "axios";
+import { getField, updateField } from "vuex-map-fields";
 
 export default {
   state: {
@@ -16,6 +17,7 @@ export default {
     login_progress: false
   },
   getters: {
+    getField,
     getUser: state => state.user,
     responseError: state => state.responseError,
     isLoggedIn: state => (state.user.email ? true : false)
@@ -67,17 +69,14 @@ export default {
     }
   },
   mutations: {
+    updateField,
     login: (state, data) => {
       state.user = data;
       state.user.email = data.data.email;
       state.responseError = data;
       state.token = data.data.api_token;
-      // eslint-disable-next-line
-      // console.log(state.token,"000000000000000");
     },
     login_fail: (state, data) => {
-      // eslint-disable-next-line
-      console.log(data, "dsadsada");
       state.error = data;
     },
     login_progress: (state, data) => {
@@ -85,21 +84,6 @@ export default {
     },
     logout: state => {
       state.user = {};
-    },
-    updateId: (state, val) => {
-      state.id = val;
-    },
-    updatename: (state, data) => {
-      state.name = data;
-    },
-    updateEmail: (state, data) => {
-      state.email = data;
-    },
-    updatePassword: (state, data) => {
-      state.password = data;
-    },
-    updateRole: (state, data) => {
-      state.role = data;
     },
     adduser: (state, data) => {
       state.users.push(data);
