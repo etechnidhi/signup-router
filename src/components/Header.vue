@@ -1,15 +1,17 @@
 <template>
   <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <div class="navbar-item">
-        Home
+      <div class="navbar-item is-size-3">
+        Polling App
       </div>
       <div class="navbar-menu">
         <div class="navbar-end">
           <div class="navbar-item">
-            <a @click="signup" v-if="!isLoggedIn" class="button is-primary">Signup</a> &nbsp; &nbsp; &nbsp;
-            <a @click="login" v-if="!isLoggedIn" class="button is white">Login</a>
-            <a @click="logout" v-if="isLoggedIn" class="button is white">Logout</a>
+            <div id="item">
+              <a @click="signup" v-if="!isLoggedIn" class="button is-primary">Signup</a> &nbsp; &nbsp; &nbsp;
+              <a @click="login" v-if="!isLoggedIn" class="button is white">Login</a>
+              <a @click="logout" v-if="isLoggedIn" class="button is white">Logout</a>
+            </div>
           </div>
         </div>
       </div>
@@ -48,5 +50,8 @@ export default {
 <style>
 .navbar-menu {
   float: right;
+}
+#item {
+  padding-left: 850px;
 }
 </style>
