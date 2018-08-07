@@ -6,30 +6,26 @@
           <input class="input" name="title" type="text" placeholder="Title input" v-model="title">
         </b-field>
       </div>
-  
-      <div class="field">
-        <b-field label="Option 1">
-          <input class="input" name="one" type="text" placeholder="Option1" v-model="option1">
-        </b-field>
+      <table class="table">
+        <div>
+        <button class="button is-danger" @click="addRow">Add row</button>
       </div>
+        <tbody>
+          <tr v-for="(item,index) in getRows" :key="index">  
+            <td>  
+              <b-field label="Option">
+                <input class="input" type="text" placeholder="Option" v-model="item.option">
+              </b-field>
+            </td>
+            <td>
+              <a v-on:click="removeElement(index);" style="cursor: pointer">Remove</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <div class="field">
-        <b-field label="Option 2">
-          <input class="input" name="two" type="text" placeholder="Option 2" v-model="option2">
-        </b-field>
-      </div>
-      <div class="field">
-        <b-field label="Option 3">
-          <input class="input" name="three" type="text" placeholder="Option 3" v-model="option3">
-        </b-field>
-      </div>
-      <div class="field">
-        <b-field label="Option 4">
-          <input class="input" name="four" type="text" placeholder="Option 4" v-model="option4">
-        </b-field>
-      </div>
-      <div class="field">
-        <button class="button is-primary" v-on:click="addpollSubmit" :class="{ 'button': true, 'is-full' : true, 'is-loading' : login_progress}">Register</button>
-      </div>
+          <button class="button is-primary" v-on:click="addpollSubmit" :class="{ 'button': true, 'is-full' : true, 'is-loading' : login_progress}">Register</button>
+        </div>
     </section>
   </div>
 </template>
@@ -41,10 +37,10 @@ import { mapFields } from "vuex-map-fields";
 export default {
   name: "AddPollForm",
   watch: {
-    isSuccess: function(val){
-      if( val === true){
+    isSuccess: function(val) {
+      if (val === true) {
         this.$router.push("profile");
-      }      
+      }
     },
     error_message: function(val) {
       if (val) {
@@ -61,7 +57,8 @@ export default {
     ...mapFields(["option1", "option2", "option3", "option4", "title"]),
     ...mapGetters({
       getOptions: "getOptions",
-      isSuccess: "isSuccess"
+      isSuccess: "isSuccess",
+      getRows: "getRows"
     }),
     login_progress: function() {
       return this.$store.state.login.login_progress;
@@ -71,18 +68,24 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["addpoll"]),
+    ...mapActions(["addpoll","RowAdd"]),
     addpollSubmit: function() {
       this.addpoll({
         token: this.$store.state.login.token,
         title: this.$store.state.addpoll.title,
-        options: [
-          { option: this.$store.state.addpoll.option1 },
-          { option: this.$store.state.addpoll.option2 },
-          { option: this.$store.state.addpoll.option3 },
-          { option: this.$store.state.addpoll.option4 }
-        ]
+        options: this.$store.state.addpoll.rows
       });
+    },
+    addRow: function() {
+this.RowAdd({
+  option:this.$store.state.addpoll.item
+})
+// this.$store.state.addpoll.rows.push({
+      //   option: ""
+      // });
+    },
+    removeElement: function(index) {
+      this.$store.state.addpoll.rows.splice(index, 1);
     }
   }
 };
