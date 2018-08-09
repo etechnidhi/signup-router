@@ -32,7 +32,7 @@ export default {
   computed: {
     ...mapGetters({
       getList: "getList",
-      successPage:"successPage"
+      successPage: "successPage"
     })
   },
   methods: {

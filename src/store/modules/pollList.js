@@ -52,9 +52,7 @@ export default {
               api_token: payload.token
             }
           }
-        ).then(
-          dispatch("showPollList", payload)
-        );
+        ).then(dispatch("showPollList", payload));
         commit("isLoading", false);
         commit("progress", false);
         this.response = response;
@@ -79,9 +77,7 @@ export default {
             api_token: payload.token
           }
         }
-      ).then(
-        dispatch("showPollList", payload)
-      );
+      ).then(dispatch("showPollList", payload));
       commit("isLoading", false);
       commit("progress", false);
       this.state.response = response;
@@ -105,9 +101,7 @@ export default {
             api_token: payload.token
           }
         }
-      ).then(
-        dispatch("showPollList", payload)
-      );
+      ).then(dispatch("showPollList", payload));
       commit("isLoading", false);
       commit("addPollOption", payload);
       this.state.response = response;

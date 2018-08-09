@@ -1,20 +1,16 @@
 <template>
   <section class="section cards" style="position:relative;">
     <div class="notification is-primary" v-if="isLoadingPage">
-  <button class="delete"></button>
-  Please Wait for a moment! :)
-</div>
+      <button class="delete"></button> Please Wait for a moment! :)
+    </div>
     <div class="container" v-if="!isLoadingPage">
       <div class="columns is-multiline">
         <div class="column  toaster is-quarter">
           <div class="card" v-for="(item,index) in poll" :key="index">
             <header class="card-header" v-if="item">
               <p class="card-header-title">
-                {{item.title}}              </p>
+                {{item.title}} </p>
               <a href="#" class="card-header-icon" aria-label="more options">
-                <span class="icon">
-                <i class="fas fa-angle-down" aria-hidden="false"></i>
-              </span>
               </a>
             </header>
             <div class="card-content">
@@ -22,7 +18,7 @@
                 <ul class="list-unstyled">
                   <li v-for="(item,index) in item.options" :key="index">
                     <span>{{item.options}}&nbsp; 
-                    </span>
+                        </span>
                   </li>
                 </ul>
                 <br>
@@ -72,9 +68,9 @@
             <li>{{index+1}}:- {{ item.options}}</li>
           </ul>
           <br/>
-              <b-field label="Option">
-                <input class="input" type="text" placeholder="Option" v-model="option1">
-              </b-field>
+          <b-field label="Option">
+            <input class="input" type="text" placeholder="Option" v-model="option1">
+          </b-field>
         </section>
         <footer class="modal-card-foot">
           <button class="button is-success" @click="updateSaveOption(pollOption,title )">Save changes</button>

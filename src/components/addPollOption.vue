@@ -3,7 +3,7 @@
     <section>
       <div class="field">
         <b-field label="Title">
-          
+  
         </b-field>
       </div>
       <table class="table">

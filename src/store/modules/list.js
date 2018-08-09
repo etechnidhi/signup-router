@@ -8,15 +8,15 @@ export default {
     email: "",
     role: "",
     userlistObject: {},
-    success:false
+    success: false
   },
   getters: {
     getList: state => state.userslist,
-    successPage: state => (state.success ? true : false),
+    successPage: state => (state.success ? true : false)
   },
   actions: {
     async showlist({ commit }, payload) {
-      commit("sucessData",true);
+      commit("sucessData", true);
       const responseData = await Axios.get(
         "http://dev.hr.excellencetechnologies.in:8000/list_users",
         {
@@ -25,7 +25,7 @@ export default {
           }
         }
       ).then(response => (this.info = response));
-      commit("sucessData",false);
+      commit("sucessData", false);
       commit("list", responseData);
       // this.state.userslist = responseData.data.data;
       this.state.userlistObject = true;

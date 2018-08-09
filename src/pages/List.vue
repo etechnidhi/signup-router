@@ -21,30 +21,30 @@
 </template>
 
 <script>
-    import Header from "./../components/Header";
-    import Listdisplay from "./../components/Listdisplay";
-    
-    export default {
-        name: "List",
-        components: {
-            Header,
-            Listdisplay
-        },
-        methods: {
-            back: function() {
-                this.$router.push("profile");
-            }
-        }
-    };
+import Header from "./../components/Header";
+import Listdisplay from "./../components/Listdisplay";
+
+export default {
+  name: "List",
+  components: {
+    Header,
+    Listdisplay
+  },
+  methods: {
+    back: function() {
+      this.$router.push("profile");
+    }
+  }
+};
 </script>
 
 <style>
-    .columns {
-        width: 90% !important;
-        margin: 0 auto !important;
-    }
-    
-    .menu-list a {
-        color: red !important;
-    }
+.columns {
+  width: 90% !important;
+  margin: 0 auto !important;
+}
+
+.menu-list a {
+  color: red !important;
+}
 </style>

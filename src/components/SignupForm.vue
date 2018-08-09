@@ -24,9 +24,9 @@
       <div class="col-md-8">
         <b-field label="Role">
           <select v-model="role" class="form-control">
-            <option value="Admin">Admin</option>
-            <option value="Guest">Guest</option>
-          </select>
+              <option value="Admin">Admin</option>
+              <option value="Guest">Guest</option>
+            </select>
         </b-field>
       </div>
       <br/>
@@ -97,7 +97,7 @@ export default {
     openMenu: function() {
       this.isMenuActive = true;
     },
-    closeError: function(){
+    closeError: function() {
       this.$store.state.login.error = false;
     }
   }

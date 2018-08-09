@@ -48,8 +48,8 @@ export default {
 </script>
 
 <style>
-@media only screen and (max-width: 1087px){
-  .navbar-menu{
+@media only screen and (max-width: 1087px) {
+  .navbar-menu {
     display: block !important;
     background-color: transparent !important;
   }

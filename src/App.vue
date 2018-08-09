@@ -9,7 +9,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "app",
   computed: {
-    ...mapGetters(["isLoggedIn"],)
+    ...mapGetters(["isLoggedIn"])
   },
 
   mounted: function() {

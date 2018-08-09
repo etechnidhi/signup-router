@@ -54,13 +54,12 @@ export default {
           payload
         );
         payload.token = response;
-        
+
         const responseData = response.data;
         // console.log(responseData,"9999999999999999999999999");
-        if(responseData.error == 1){
-          commit("login_fail",responseData);
-        }
-        else{
+        if (responseData.error == 1) {
+          commit("login_fail", responseData);
+        } else {
           commit("adduser", payload);
         }
         commit("blankform", "");
