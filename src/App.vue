@@ -9,8 +9,9 @@ import { mapGetters } from "vuex";
 export default {
   name: "app",
   computed: {
-    ...mapGetters(["isLoggedIn"])
+    ...mapGetters(["isLoggedIn"],)
   },
+
   mounted: function() {
     if (this.isLoggedIn) {
       this.$router.push("/profile");

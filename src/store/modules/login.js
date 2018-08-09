@@ -13,13 +13,12 @@ export default {
     token: "",
     error: false,
     responseError: "",
-    // responseError:"",
     login_progress: false
   },
   getters: {
     getField,
     getUser: state => state.user,
-    responseError: state => state.responseError,
+    responseError: state => (state.error ? true : false),
     isLoggedIn: state => (state.user.email ? true : false)
   },
   actions: {
@@ -27,20 +26,17 @@ export default {
       try {
         commit("login_progress", true);
         const response = await Axios.post(
-          "http://192.168.1.7:8000/login",
+          "http://dev.hr.excellencetechnologies.in:8000/login",
           payload
         );
         delete payload.password;
         const responseData = response.data;
-
         if (responseData.error == 1) {
           commit("login_fail", responseData);
         } else {
           commit("login", responseData);
           commit("blankform", "");
         }
-        commit("updateEmail", "");
-        commit("updatePassword", "");
         commit("login_progress", false);
       } catch (err) {
         commit("login_progress", false);
@@ -54,12 +50,19 @@ export default {
       try {
         commit("login_progress", true);
         const response = await Axios.post(
-          "http://192.168.1.7:8000/add_user",
+          "http://dev.hr.excellencetechnologies.in:8000/add_user",
           payload
         );
         payload.token = response;
-        commit("adduser", payload);
-        commit("updateEmail", "");
+        
+        const responseData = response.data;
+        // console.log(responseData,"9999999999999999999999999");
+        if(responseData.error == 1){
+          commit("login_fail",responseData);
+        }
+        else{
+          commit("adduser", payload);
+        }
         commit("blankform", "");
         commit("login_progress", false);
       } catch (err) {
@@ -77,7 +80,8 @@ export default {
       state.token = data.data.api_token;
     },
     login_fail: (state, data) => {
-      state.error = data;
+      state.error = true;
+      state.responseError = data.message;
     },
     login_progress: (state, data) => {
       state.login_progress = data;

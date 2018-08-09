@@ -48,10 +48,10 @@ export default {
 </script>
 
 <style>
-.navbar-menu {
-  float: right;
-}
-#item {
-  padding-left: 850px;
+@media only screen and (max-width: 1087px){
+  .navbar-menu{
+    display: block !important;
+    background-color: transparent !important;
+  }
 }
 </style>

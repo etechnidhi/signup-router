@@ -26,7 +26,7 @@ export default {
       commit("success", false);
       commit("login_progress", true);
       const responseData = await Axios.post(
-        "http://192.168.1.7:8000/add_poll",
+        "http://dev.hr.excellencetechnologies.in:8000/add_poll",
         payload,
         {
           headers: {
@@ -39,10 +39,9 @@ export default {
       commit("login_progress", false);
       commit("success", true);
     },
-    RowAdd({ commit }, payload) {
-      commit("RowAdd", payload);
-    },
-    
+    rowAdd({ commit }, payload) {
+      commit("rowAdd", payload);
+    }
   },
   mutations: {
     updateField,
@@ -62,7 +61,7 @@ export default {
     success: (state, val) => {
       state.success = val;
     },
-    RowAdd: (state, val) => {
+    rowAdd: (state, val) => {
       if (!state.rows.length) {
         state.rows = [];
       }

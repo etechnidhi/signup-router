@@ -9,19 +9,19 @@
                     </h1>
                     <h2>Welcome :)</h2>
                     <br/>
-                    <div id="buttons">
-                        <div class="field is-grouped">
-                            <p class="control">
-                                <a @click="list" v-if="isLoggedIn" class="button is-info is-focused is-dark">List</a>
-                            </p>
-                            <p class="control">
-                                <a @click="add" v-if="isLoggedIn" class="button is-warning is-focused">Add Poll</a>
-                            </p>
-                            <p class="control">
-                                <a @click="listpoll" v-if="isLoggedIn" class="button is-warning is-focused">Poll List</a>
-                            </p>
-                        </div>
-                    </div>
+                    <aside class="menu">
+  <p >
+                            <a @click="list" v-if="isLoggedIn" class="button is-info is-focused is-dark"> User List</a>
+                        </p>
+                        <br/>
+                        <p >
+                            <a @click="add" v-if="isLoggedIn" class="button is-warning is-focused">Add Poll</a>
+                        </p>
+                        <br/>
+                        <p >
+                            <a @click="listpoll" v-if="isLoggedIn" class="button is-info is-focused">Poll List</a>
+                        </p> 
+</aside>
                 </div>
             </div>
         </section>
@@ -50,22 +50,12 @@ export default {
     add: function() {
       this.$router.push("addpoll");
     },
-    listpoll : function(){
-        this.$router.push("pollList")
+    listpoll: function() {
+      this.$router.push("pollList");
     }
   }
 };
 </script>
 
 <style>
-#buttons {
-  /* margin: 0 auto; */
-  margin-left: 400px;
-  width: 60%;
-}
-
-.control {
-  margin: 0 auto;
-  margin-left: 25px;
-}
 </style>

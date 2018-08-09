@@ -2,13 +2,13 @@
   <div id="submitForm">
     <section>
       <div class="field">
-        <b-field label="name" :type="errors.has('name') ? 'is-danger': ''" :message="errors.has('name') ? errors.first('name') : ''">
-          <input class="input" name="name" type="text" placeholder="Email input" v-validate="'required|alpha|min:3'" v-model="name">
+        <b-field label="Name" :type="errors.has('name') ? 'is-danger': ''" :message="errors.has('name') ? errors.first('name') : ''">
+          <input class="input" name="name" type="text" placeholder="Email input" v-validate="'required|min:3'" v-model="name">
         </b-field>
       </div>
       <div class="field">
         <b-field label="Email" :type="errors.has('email') ? 'is-danger': ''" :message="errors.has('email') ? errors.first('email') : ''">
-          <input class="input" name="email" type="text" placeholder="Email" v-validate="'required|email'" v-model="email">
+          <input class="input" name="email" type="text" placeholder="Email" v-validate="'required'" v-model="email">
         </b-field>
       </div>
       <div class="field">
@@ -21,15 +21,21 @@
           <input class="input" name="conf-password" type="password" v-validate="'required|min:6|max:16'" placeholder="Confirm Password">
         </b-field>
       </div>
-      <div class="field">
-        <b-field label="Role" :type="errors.has('role') ? 'is-danger': ''" :message="errors.has('role') ? errors.first('role') : ''">
-          <input class="input" name="role" type="text" v-validate="'required|alpha'" placeholder="Enter Role" v-model="role">
+      <div class="col-md-8">
+        <b-field label="Role">
+          <select v-model="role" class="form-control">
+            <option value="Admin">Admin</option>
+            <option value="Guest">Guest</option>
+          </select>
         </b-field>
       </div>
+      <br/>
       <div class="field">
         <button class="button is-primary" :disabled="errors.any()" v-on:click="submit" :class="{ 'button': true, 'is-full' : true, 'is-loading' : login_progress}">Register</button>
       </div>
-  
+      <div class="notification is-danger" v-if="responseError">
+        <button class="delete" @click="closeError"></button> {{this.$store.state.login.responseError}}
+      </div>
     </section>
   </div>
 </template>
@@ -41,8 +47,13 @@ import { mapFields } from "vuex-map-fields";
 let count = 0;
 export default {
   name: "SignupForm",
+  data: function() {
+    return {
+      isMenuActive: false
+    };
+  },
   watch: {
-    user: function(val) {      
+    user: function(val) {
       if (val) {
         this.$router.push("login");
       }
@@ -61,7 +72,8 @@ export default {
   computed: {
     ...mapFields(["id", "name", "email", "password", "role"]),
     ...mapGetters({
-      user: "getUser"
+      user: "getUser",
+      responseError: "responseError"
     }),
     login_progress: function() {
       return this.$store.state.login.login_progress;
@@ -79,8 +91,14 @@ export default {
         name: this.$store.state.login.name,
         email: this.$store.state.login.email,
         password: this.$store.state.login.password,
-        role:this.$store.state.login.role
+        role: this.$store.state.login.role
       });
+    },
+    openMenu: function() {
+      this.isMenuActive = true;
+    },
+    closeError: function(){
+      this.$store.state.login.error = false;
     }
   }
 };

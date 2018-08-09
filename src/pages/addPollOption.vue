@@ -13,13 +13,13 @@
         <div class="box">
             <section class="hero is-primary is-medium">
                 <div class="heading1 has-text-dark has-text-centered">
-                    <h1>Add Your Poll</h1>
+                    <h1>Add Your Poll Option</h1>
                 </div>
             </section>
             <section>
                 <div class="columns">
                     <div class="column">
-                        <AddPollForm/>
+                        <addPollOption/>
                     </div>
                 </div>
             </section>
@@ -31,12 +31,12 @@
 
 <script>
 import Header from "./../components/Header";
-import AddPollForm from "./../components/AddPoll";
+import addPollOption from "./../components/addPollOption";
 export default {
-  name: "AddPoll",
+  name: "AddPollOption",
   components: {
     Header,
-    AddPollForm
+    addPollOption
   },
   methods: {
     back: function() {

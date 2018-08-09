@@ -30,8 +30,8 @@
             Header,
             Listdisplay
         },
-        methods:{
-            back:function(){
+        methods: {
+            back: function() {
                 this.$router.push("profile");
             }
         }
@@ -39,11 +39,12 @@
 </script>
 
 <style>
-    .columns{
+    .columns {
         width: 90% !important;
         margin: 0 auto !important;
     }
-    .menu-list a{
+    
+    .menu-list a {
         color: red !important;
     }
 </style>

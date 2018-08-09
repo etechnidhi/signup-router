@@ -3,7 +3,7 @@
     <section>
       <div class="field">
         <b-field label="Email" :type="errors.has('email') ? 'is-danger': ''" :message="errors.has('email') ? errors.first('email') : ''">
-          <input class="input" name="email" type="text" placeholder="Email input" v-validate="'required|email'" v-model="email">
+          <input class="input" name="email" type="text" placeholder="Email input" v-validate="'required'" v-model="email">
         </b-field>
       </div>
       <div class="field">
@@ -14,9 +14,11 @@
       <div class="field">
         <button class="button is-success" :disabled="errors.any()" v-on:click="loginClick" :class="{ 'button': true, 'is-full' : true, 'is-loading' : login_progress}">Login</button>
       </div>
+      <div class="notification is-danger" v-if="responseError">
+        <button class="delete" @click="closeError"></button> {{this.$store.state.login.responseError}}
+      </div>
     </section>
   </div>
-  
 </template>
 
 <script>
@@ -43,17 +45,18 @@ export default {
     }
   },
   computed: {
-     ...mapFields([ "email", "password"]),
+    ...mapFields(["email", "password"]),
     ...mapGetters({
       user: "getUser",
-      isLoggedIn: "isLoggedIn"
+      isLoggedIn: "isLoggedIn",
+      responseError: "responseError"
     }),
     login_progress: function() {
       return this.$store.state.login.login_progress;
     },
     error_message: function() {
       return this.$store.state.login.error;
-    },
+    }
   },
   methods: {
     ...mapActions(["login"]),
@@ -62,6 +65,9 @@ export default {
         email: this.email,
         password: this.password
       });
+    },
+    closeError: function() {
+      this.$store.state.login.error = false;
     }
   }
 };

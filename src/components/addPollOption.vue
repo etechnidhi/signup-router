@@ -3,7 +3,7 @@
     <section>
       <div class="field">
         <b-field label="Title">
-          <input class="input" name="title" type="text" placeholder="Title input" v-model="title">
+          
         </b-field>
       </div>
       <table class="table">
@@ -24,7 +24,7 @@
         </tbody>
       </table>
       <div class="field">
-        <button class="button is-primary" v-on:click="addPollSubmit" :class="{ 'button': true, 'is-full' : true, 'is-loading' : login_progress}">Add</button>
+        <button class="button is-primary" v-on:click="addPollSubmit" :class="{ 'button': true, 'is-full' : true, 'is-loading' : login_progress}">Register</button>
       </div>
     </section>
   </div>
@@ -35,11 +35,11 @@ import { mapActions, mapGetters } from "vuex";
 import { mapFields } from "vuex-map-fields";
 
 export default {
-  name: "AddPollForm",
+  name: "addPollOption",
   watch: {
     isSuccess: function(val) {
       if (val === true) {
-        this.$router.push("pollList");
+        this.$router.push("profile");
       }
     },
     error_message: function(val) {

@@ -7,29 +7,36 @@ export default {
     name: "",
     email: "",
     role: "",
-    userlist: {}
+    userlistObject: {},
+    success:false
   },
   getters: {
-    getList: state => state.userslist
+    getList: state => state.userslist,
+    successPage: state => (state.success ? true : false),
   },
   actions: {
     async showlist({ commit }, payload) {
+      commit("sucessData",true);
       const responseData = await Axios.get(
-        "http://192.168.1.7:8000/list_users",
+        "http://dev.hr.excellencetechnologies.in:8000/list_users",
         {
           headers: {
             api_token: payload.token
           }
         }
       ).then(response => (this.info = response));
-      commit("list",responseData);
+      commit("sucessData",false);
+      commit("list", responseData);
       // this.state.userslist = responseData.data.data;
-      this.state.userlist = true;
+      this.state.userlistObject = true;
     }
   },
-  mutations:{
-    list: (state,data)=>{
+  mutations: {
+    list: (state, data) => {
       state.userslist = data.data.data;
+    },
+    sucessData: (state, data) => {
+      state.success = data;
     }
   }
 };

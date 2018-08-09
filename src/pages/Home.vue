@@ -11,9 +11,8 @@
                         Let's Begin Here!
                     </h2>
                     <div class="notification is-danger">
-  <button class="delete"></button>
-  Please Login First! :)
-</div>
+                        <button class="delete"></button> Please Login First! :)
+                    </div>
                 </div>
             </div>
         </section>
@@ -21,18 +20,17 @@
 </template>
 
 <script>
-    import Header from './../components/Header'
-    export default {
-        name: "Home",
-        components: {
-            Header
-        }
-    
-    }
+import Header from "./../components/Header";
+export default {
+  name: "Home",
+  components: {
+    Header
+  }
+};
 </script>
 
 <style>
-    .hero.is-primary {
-        height: 100% !important;
-    }
+/* .hero.is-primary {
+  height: 100% !important;
+} */
 </style>
