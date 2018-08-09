@@ -13,14 +13,17 @@ export default {
     error: false,
     isModalActive: false,
     isLoading: false,
-    option1: ""
+    option1: "",
+    vote:"",
+    rows:[],
+    pollArray:[]
   },
   getters: {
     getField,
     poll: state => state.pollList,
     pollOption: state => state.rows,
     progressbar: state => (state.progress ? true : false),
-    isLoadingPage: state => (state.isLoading ? true : false)
+    isLoadingPage: state => (state.isLoading ? true : false),
   },
   actions: {
     async showPollList({ commit }, payload) {
@@ -36,7 +39,6 @@ export default {
       commit("isLoading", false);
       response["data"]["data"].reverse();
       commit("list", response);
-      this.state.response = true;
     },
 
     async delete({ dispatch, commit }, payload) {
@@ -87,14 +89,15 @@ export default {
       commit("addRow", payload);
     },
 
-    async submitAddOption({ dispatch, commit }, payload) {
+    async submitAddOption({ dispatch, commit }, payload) {    
+      commit("isLoading", true);
       const response = await Axios.post(
         `http://dev.hr.excellencetechnologies.in:8000/add_poll_option/${
           payload.item.id
         }`,
         {
           title: payload.title,
-          option: payload.option
+          options: payload.options
         },
         {
           headers: {
@@ -103,8 +106,41 @@ export default {
         }
       ).then(dispatch("showPollList", payload));
       commit("isLoading", false);
+      commit("clearRow",[]);    
       commit("addPollOption", payload);
       this.state.response = response;
+    },
+
+    async deletePollOptionLink({ dispatch, commit }, payload) {
+      console.log(payload, "000000000000000000");
+      commit("isLoading", true);
+      const response = await Axios.delete(
+        `http://dev.hr.excellencetechnologies.in:8000/delete_poll_option/${
+          payload.id
+        }/${payload.opt_id}`,
+        {
+          headers: {
+            api_token: payload.token
+          }
+        }
+      ).then(dispatch("showPollList", payload));
+      commit("isLoading", false);
+    },
+
+    async submitVote({ dispatch, commit }, payload) {
+      commit("isLoading", true);
+      const response = await Axios.put(
+        `http://dev.hr.excellencetechnologies.in:8000/vote/${
+          payload.poll_id
+        }/${payload.opt_id}`,
+        {
+          headers:{
+            api_token: payload.token
+          }
+        }
+      ).then(dispatch("showPollList",payload));
+      
+      commit("isLoading",false);  
     }
   },
   mutations: {
@@ -129,6 +165,9 @@ export default {
     },
     addPollOption: (state, data) => {
       state.option1 = data.option;
+    },
+    clearRow: (state,data)=>{
+      state.rows = data;      
     }
   }
 };

@@ -10,18 +10,27 @@
             <header class="card-header" v-if="item">
               <p class="card-header-title">
                 {{item.title}} </p>
-              <a href="#" class="card-header-icon" aria-label="more options">
-              </a>
             </header>
             <div class="card-content">
               <div class="content">
                 <ul class="list-unstyled">
-                  <li v-for="(item,index) in item.options" :key="index">
-                    <span>{{item.options}}&nbsp; 
-                        </span>
+                  <li v-for="(optionitem,index) in item.options" :key="index">
+                    <div class="list-find">
+                      <div class="span">
+                        <span>{{optionitem.options}}&nbsp; </span>
+                      </div>
+                      <div class="control">
+                        <label class="radio">
+                              <input type="radio" name="foobar" v-on:click="enableButton(optionitem)">
+                              Vote
+                          </label> {{optionitem.vote}}
+                        <a href="#" id="deleteOption" class="button is-danger is-small" @click="deletePollOption(item,optionitem)" aria-label="more options">Delete Poll Option</a>
+                      </div>
+                    </div>
                   </li>
                 </ul>
                 <br>
+                <a class="button is-primary" :disabled="buttonShow == false" @click="submitPollVote(item)">Submit</a>
               </div>
             </div>
             <footer class="card-footer">
@@ -68,9 +77,23 @@
             <li>{{index+1}}:- {{ item.options}}</li>
           </ul>
           <br/>
-          <b-field label="Option">
-            <input class="input" type="text" placeholder="Option" v-model="option1">
-          </b-field>
+          <table class="table">
+            <div>
+              <button class="button is-danger" @click="addRow">Add row</button>
+            </div>
+            <tbody>
+              <tr v-for="(itemOption,index) in pollOption" :key="index">
+                <td>
+                  <b-field label="Option">
+                    <input class="input" type="text" placeholder="Option" v-model="itemOption.option">
+                  </b-field>
+                </td>
+                <td>
+                  <a v-on:click="removeElement(index);" style="cursor: pointer">Remove</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </section>
         <footer class="modal-card-foot">
           <button class="button is-success" @click="updateSaveOption(pollOption,title )">Save changes</button>
@@ -94,7 +117,10 @@ export default {
       id: "",
       isModalOptionActive: false,
       options: [],
-      item: []
+      item: [],
+      optionid: "",
+      buttonShow: false,
+      optionItemId: ""
     };
   },
   computed: {
@@ -103,7 +129,8 @@ export default {
       poll: "poll",
       progressbar: "progressbar",
       isLoadingPage: "isLoadingPage",
-      pollOption: "pollOption"
+      pollOption: "pollOption",
+      voteCount: "voteCount"
     })
   },
   methods: {
@@ -112,7 +139,9 @@ export default {
       "delete",
       "updateTitle",
       "optionRowAdd",
-      "submitAddOption"
+      "submitAddOption",
+      "deletePollOptionLink",
+      "submitVote"
     ]),
     displayList: function() {
       this.showPollList({
@@ -166,11 +195,38 @@ export default {
       this.submitAddOption({
         token: this.$store.state.login.token,
         title: this.title,
-        option: this.$store.state.pollList.option1,
+        options: this.$store.state.pollList.rows,
         item: this.item
       });
       this.isModalOptionActive = false;
-    }
+    },
+    deletePollOption: function(item, deletePollOption) {
+      (this.optionid = deletePollOption.opt_id),
+        (this.id = item.id),
+        this.deletePollOptionLink({
+          token: this.$store.state.login.token,
+          title: this.title,
+          id: this.id,
+          opt_id: this.optionid
+        });
+    },
+    enableButton: function(optionitem) {
+      this.optionItemId = optionitem.opt_id;
+      this.$store.state.pollList.pollArray.push(this.optionItemId);     
+      this.buttonShow = true;
+    },
+    submitPollVote: function(item) {      
+      this.id = item.id;
+      this.submitVote({
+        poll_id: this.id,
+        opt_id: this.optionItemId,
+        token: this.$store.state.login.token
+      });
+    },
+    removeElement: function(index) {
+      this.$store.state.pollList.rows.splice(index, 1);
+    },
+
   },
   beforeMount() {
     this.displayList();
@@ -181,5 +237,25 @@ export default {
 <style>
 a {
   margin-left: 25px;
+}
+
+li {
+  padding: 12px;
+}
+
+.button.is-small {
+  float: right !important;
+}
+
+.list-find {
+  display: flex !important;
+}
+
+.container {
+  width: 90% !important;
+}
+
+.span {
+  width: 60%;
 }
 </style>

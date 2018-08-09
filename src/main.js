@@ -29,7 +29,7 @@ const routes = [
   { path: "/list", component: List },
   { path: "/addpoll", component: AddPoll },
   { path: "/pollList", component: ListPoll },
-  { path: "/addPollOption", component: addPollOption }
+  { path: "/addPollOption", component: addPollOption },
 ];
 const router = new VueRouter({
   routes
