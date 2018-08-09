@@ -1,35 +1,42 @@
 import Axios from "axios";
+import { getField, updateField } from "vuex-map-fields";
 
 export default {
   state: {
     users: [],
     id: "",
-    username: "",
+    name: "",
     email: "",
     password: "",
+    role: "",
     user: {},
+    token: "",
     error: false,
+    responseError: "",
     login_progress: false
   },
   getters: {
+    getField,
     getUser: state => state.user,
-    isLoggedIn: state => (state.user.username ? true : false)
+    responseError: state => (state.error ? true : false),
+    isLoggedIn: state => (state.user.email ? true : false)
   },
   actions: {
     async login({ commit }, payload) {
-      // eslint-disable-next-line
-      console.log("dsadsadsadsadsadsaddsadsa");
       try {
         commit("login_progress", true);
         const response = await Axios.post(
-          "https://reqres.in/api/login",
+          "http://dev.hr.excellencetechnologies.in:8000/login",
           payload
         );
         delete payload.password;
-        payload.token = response;
-        commit("login", payload);
-        commit("updateUsername", "");
-        commit("updatePassword", "");
+        const responseData = response.data;
+        if (responseData.error == 1) {
+          commit("login_fail", responseData);
+        } else {
+          commit("login", responseData);
+          commit("blankform", "");
+        }
         commit("login_progress", false);
       } catch (err) {
         commit("login_progress", false);
@@ -43,13 +50,19 @@ export default {
       try {
         commit("login_progress", true);
         const response = await Axios.post(
-          "https://reqres.in/api/register",
+          "http://dev.hr.excellencetechnologies.in:8000/add_user",
           payload
         );
         payload.token = response;
-        commit("adduser", payload);
-        commit("updateUsername", "");
-        commit("updatePassword", "");
+
+        const responseData = response.data;
+        // console.log(responseData,"9999999999999999999999999");
+        if (responseData.error == 1) {
+          commit("login_fail", responseData);
+        } else {
+          commit("adduser", payload);
+        }
+        commit("blankform", "");
         commit("login_progress", false);
       } catch (err) {
         commit("login_progress", false);
@@ -58,22 +71,16 @@ export default {
     }
   },
   mutations: {
+    updateField,
     login: (state, data) => {
       state.user = data;
-      for (var i = 0; i < state.users.length; i++) {
-        if (
-          state.users[i]["username"] === data.username &&
-          state.users[i]["password"] === data.password
-        ) {
-          state.user = data;
-        } else {
-          // eslint-disable-next-line
-          console.log("Email or password doesn't match");
-        }
-      }
+      state.user.email = data.data.email;
+      state.responseError = data;
+      state.token = data.data.api_token;
     },
     login_fail: (state, data) => {
-      state.error = data;
+      state.error = true;
+      state.responseError = data.message;
     },
     login_progress: (state, data) => {
       state.login_progress = data;
@@ -81,26 +88,16 @@ export default {
     logout: state => {
       state.user = {};
     },
-    updateId: (state, val) => {
-      state.id = val;
-    },
-    updateUsername: (state, data) => {
-      state.username = data;
-    },
-    updateEmail: (state, data) => {
-      state.email = data;
-    },
-    updatePassword: (state, data) => {
-      state.password = data;
-    },
     adduser: (state, data) => {
       state.users.push(data);
+      state.user = true;
     },
     blankform: (state, val) => {
       state.id = val;
-      state.username = val;
+      state.name = val;
       state.email = val;
       state.password = val;
+      state.role = val;
     }
   }
 };

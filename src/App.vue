@@ -11,6 +11,7 @@ export default {
   computed: {
     ...mapGetters(["isLoggedIn"])
   },
+
   mounted: function() {
     if (this.isLoggedIn) {
       this.$router.push("/profile");
