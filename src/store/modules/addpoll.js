@@ -4,8 +4,6 @@ import { getField, updateField } from "vuex-map-fields";
 export default {
   state: {
     arrays: [],
-    option: {},
-    option0: "",
     title: "",
     rows: [
       {
@@ -35,7 +33,7 @@ export default {
         }
       ).then(response => (this.info = response));
       commit("addpoll", responseData);
-      commit("blankform", "");
+      commit("blankform", []);
       commit("login_progress", false);
       commit("success", true);
     },
@@ -55,7 +53,7 @@ export default {
       state.arrays.push(data);
     },
     blankform: (state, val) => {
-      state.title = val;
+      state.title = "";
       state.rows = val;
     },
     success: (state, val) => {

@@ -4,7 +4,6 @@ import login from "./modules/login";
 import list from "./modules/list";
 import addpoll from "./modules/addpoll";
 import pollList from "./modules/pollList";
-import AddPollOption from "./modules/AddPollOption";
 
 import createPersistedState from "vuex-persistedstate";
 
@@ -16,8 +15,7 @@ export default new Vuex.Store({
     login,
     list,
     addpoll,
-    pollList,
-    AddPollOption
+    pollList
   },
   strict: debug,
   plugins: [createPersistedState()]
