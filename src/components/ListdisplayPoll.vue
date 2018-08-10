@@ -23,9 +23,8 @@
                       </div>
                       <div class="control">
                         <label class="radio" v-if="item.id == id ? isButtonActive: true">
-                              <input type="radio" v-on:click="enableButton(optionitem)">
-                              
-                            </label>Vote {{optionitem.vote}}
+                            <input type="radio" v-on:click="enableButton(optionitem)">
+                        </label>Vote {{optionitem.vote}}
                         <a href="#" id="deleteOption" class="button is-danger is-small" @click="deletePollOption(item,optionitem)" aria-label="more options">Delete Poll Option</a>
                       </div>
                     </div>

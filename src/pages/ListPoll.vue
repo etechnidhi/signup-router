@@ -5,8 +5,8 @@
             <ul class="menu-list is-primary">
                 <li>
                     <a href="#" v-on:click="back">
-                            Get Back To Your Profile
-                        </a>
+                        Get Back To Your Profile
+                    </a>
                 </li>
             </ul>
         </aside>
@@ -17,30 +17,29 @@
 </template>
 
 <script>
-    import Header from "./../components/Header";
-    import ListdisplayPoll from "./../components/ListdisplayPoll";
-    
-    export default {
-        name: "ListPoll",
-        components: {
-            Header,
-            ListdisplayPoll
-        },
-        methods: {
-            back: function() {
-                this.$router.push("profile");
-            }
-        }
-    };
+import Header from "./../components/Header";
+import ListdisplayPoll from "./../components/ListdisplayPoll";
+
+export default {
+  name: "ListPoll",
+  components: {
+    Header,
+    ListdisplayPoll
+  },
+  methods: {
+    back: function() {
+      this.$router.push("profile");
+    }
+  }
+};
 </script>
 
 <style>
-    .columns {
-        /* width: 90% !important; */
-        margin: 0 auto !important;
-    }
-    
-    .menu-list a {
-        color: red !important;
-    }
+.columns {
+  margin: 0 auto !important;
+}
+
+.menu-list a {
+  color: red !important;
+}
 </style>
