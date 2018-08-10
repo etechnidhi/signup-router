@@ -15,7 +15,7 @@ export default new Vuex.Store({
     login,
     list,
     addpoll,
-    pollList,
+    pollList
   },
   strict: debug,
   plugins: [createPersistedState()]

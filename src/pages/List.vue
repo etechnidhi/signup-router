@@ -5,8 +5,8 @@
             <ul class="menu-list is-primary">
                 <li>
                     <a href="#" v-on:click="back">
-                        Get Back To Your Profile
-                    </a>
+                            Get Back To Your Profile
+                        </a>
                 </li>
             </ul>
         </aside>

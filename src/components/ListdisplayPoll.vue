@@ -3,15 +3,17 @@
     <div class="notification is-primary" v-if="isLoadingPage">
       <button class="delete"></button> Please Wait for a moment! :)
     </div>
+    <!-- start of list of Polls -->
     <div class="container" v-if="!isLoadingPage">
       <div class="columns is-multiline">
-        <div class="column  toaster is-quarter">
+  
+        <div class="column  toaster">
           <div class="card" v-for="(item,index) in poll" :key="index">
             <header class="card-header" v-if="item">
               <p class="card-header-title">
                 {{item.title}} </p>
             </header>
-            <div class="card-content">
+            <div class="card-content ">
               <div class="content">
                 <ul class="list-unstyled">
                   <li v-for="(optionitem,index) in item.options" :key="index">
@@ -20,16 +22,19 @@
                         <span>{{optionitem.options}}&nbsp; </span>
                       </div>
                       <div class="control">
-                        <label class="radio">
-                              <input type="radio" name="foobar" v-on:click="enableButton(optionitem)">
-                              Vote
-                          </label> {{optionitem.vote}}
+                        <label class="radio" v-if="item.id == id ? isButtonActive: true">
+                              <input type="radio" v-on:click="enableButton(optionitem)">
+                              
+                            </label>Vote {{optionitem.vote}}
                         <a href="#" id="deleteOption" class="button is-danger is-small" @click="deletePollOption(item,optionitem)" aria-label="more options">Delete Poll Option</a>
                       </div>
                     </div>
                   </li>
-                </ul>
-                <br>
+                  <br/>
+                  <section class="hero body" v-if="item.id == id ? !isButtonActive: false">
+                    <h1 class="title has-text-danger">Voted SuccessFully</h1>
+                  </section>
+                </ul><br/>
                 <a class="button is-primary" :disabled="buttonShow == false" @click="submitPollVote(item)">Submit</a>
               </div>
             </div>
@@ -42,6 +47,9 @@
         </div>
       </div>
     </div>
+    <!-- end of list of Polls -->
+  
+    <!-- start of edit poll title modal -->
     <div class="modal" v-bind:class="{ 'is-active': isModalActive }">
       <div class="modal-background"></div>
       <div class="modal-card">
@@ -62,6 +70,9 @@
         </footer>
       </div>
     </div>
+    <!-- end of Edit title modal -->
+  
+    <!-- start of Add Poll Option Modal -->
     <div class="modal" v-bind:class="{ 'is-active': isModalOptionActive }">
       <div class="modal-background"></div>
       <div class="modal-card">
@@ -101,6 +112,24 @@
         </footer>
       </div>
     </div>
+    <!-- End of Add Poll Option Modal -->
+  
+    <!-- Alert Modal  -->
+    <div class="modal" v-bind:class="{ 'is-active': isResponseError }">
+      <div class="modal-background"></div>
+      <div class="modal-card ">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Alert!</p>
+          <button class="delete" aria-label="close" @click="closeOption"></button>
+        </header>
+        <section class="modal-card-body has-background-primary">
+          {{this.$store.state.pollList.response}}
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button" @click="closeOption">OK</button>
+        </footer>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -120,7 +149,9 @@ export default {
       item: [],
       optionid: "",
       buttonShow: false,
-      optionItemId: ""
+      optionItemId: "",
+      message: "",
+      arrayToCheck: []
     };
   },
   computed: {
@@ -130,7 +161,10 @@ export default {
       progressbar: "progressbar",
       isLoadingPage: "isLoadingPage",
       pollOption: "pollOption",
-      voteCount: "voteCount"
+      voteCount: "voteCount",
+      isResponseError: "isResponseError",
+      isButtonActive: "isButtonActive",
+      getResponse: "getResponse"
     })
   },
   methods: {
@@ -141,7 +175,9 @@ export default {
       "optionRowAdd",
       "submitAddOption",
       "deletePollOptionLink",
-      "submitVote"
+      "submitVote",
+      "responseDataPoll",
+      "disableButton"
     ]),
     displayList: function() {
       this.showPollList({
@@ -181,6 +217,7 @@ export default {
     },
     closeOption: function() {
       this.isModalOptionActive = false;
+      this.$store.state.pollList.responseError = false;
     },
     addRow: function() {
       this.optionRowAdd({
@@ -212,21 +249,24 @@ export default {
     },
     enableButton: function(optionitem) {
       this.optionItemId = optionitem.opt_id;
-      this.$store.state.pollList.pollArray.push(this.optionItemId);     
       this.buttonShow = true;
     },
-    submitPollVote: function(item) {      
-      this.id = item.id;
-      this.submitVote({
-        poll_id: this.id,
-        opt_id: this.optionItemId,
-        token: this.$store.state.login.token
-      });
-    },
-    removeElement: function(index) {
-      this.$store.state.pollList.rows.splice(index, 1);
-    },
-
+    submitPollVote: function(item) {
+      this.arrayToCheck = this.$store.state.pollList.pollArray;
+      if (this.arrayToCheck.indexOf(item.id) != -1) {
+        this.buttonShow = false;
+        this.disableButton({
+          isButtonActive: false
+        });
+      } else {
+        this.id = item.id;
+        this.submitVote({
+          poll_id: this.id,
+          opt_id: this.optionItemId,
+          token: this.$store.state.login.token
+        });
+      }
+    }
   },
   beforeMount() {
     this.displayList();
@@ -253,6 +293,11 @@ li {
 
 .container {
   width: 90% !important;
+}
+
+.card {
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 .span {

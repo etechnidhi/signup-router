@@ -7,16 +7,17 @@ export default {
     id: "",
     title: "",
     options: "",
-    response: {},
-    responseError: "",
+    response: "",
+    responseError: false,
     progress: false,
     error: false,
     isModalActive: false,
     isLoading: false,
     option1: "",
-    vote:"",
-    rows:[],
-    pollArray:[]
+    vote: "",
+    rows: [],
+    pollArray: [],
+    buttonActive: true
   },
   getters: {
     getField,
@@ -24,12 +25,16 @@ export default {
     pollOption: state => state.rows,
     progressbar: state => (state.progress ? true : false),
     isLoadingPage: state => (state.isLoading ? true : false),
+    isResponseError: state => (state.responseError ? true : false),
+    isButtonActive: state => (state.buttonActive ? true : false),
+    getResponse: state => state.response
   },
   actions: {
     async showPollList({ commit }, payload) {
       commit("isLoading", true);
       const response = await Axios.get(
         "http://dev.hr.excellencetechnologies.in:8000/list_polls",
+        // "http://192.168.1.116:8000/list_polls",
         {
           headers: {
             api_token: payload.token
@@ -55,6 +60,7 @@ export default {
             }
           }
         ).then(dispatch("showPollList", payload));
+        commit("responseData", response);
         commit("isLoading", false);
         commit("progress", false);
         this.response = response;
@@ -89,12 +95,11 @@ export default {
       commit("addRow", payload);
     },
 
-    async submitAddOption({ dispatch, commit }, payload) {    
+    async submitAddOption({ dispatch, commit }, payload) {
       commit("isLoading", true);
       const response = await Axios.post(
-        `http://dev.hr.excellencetechnologies.in:8000/add_poll_option/${
-          payload.item.id
-        }`,
+        `http://dev.hr.excellencetechnologies.in:8000/add_poll_option/
+        ${payload.item.id}`,
         {
           title: payload.title,
           options: payload.options
@@ -106,13 +111,12 @@ export default {
         }
       ).then(dispatch("showPollList", payload));
       commit("isLoading", false);
-      commit("clearRow",[]);    
+      commit("clearRow", []);
       commit("addPollOption", payload);
       this.state.response = response;
     },
 
     async deletePollOptionLink({ dispatch, commit }, payload) {
-      console.log(payload, "000000000000000000");
       commit("isLoading", true);
       const response = await Axios.delete(
         `http://dev.hr.excellencetechnologies.in:8000/delete_poll_option/${
@@ -124,23 +128,35 @@ export default {
           }
         }
       ).then(dispatch("showPollList", payload));
+      commit("responseData", response);
+      commit("buttonActive", true);
       commit("isLoading", false);
     },
 
     async submitVote({ dispatch, commit }, payload) {
       commit("isLoading", true);
-      const response = await Axios.put(
-        `http://dev.hr.excellencetechnologies.in:8000/vote/${
-          payload.poll_id
-        }/${payload.opt_id}`,
+      // console.log(state.pollArray,"pollArray");
+      // commit("check",payload.poll_id);
+      await Axios.put(
+        `http://dev.hr.excellencetechnologies.in:8000/vote/${payload.poll_id}/${
+          payload.opt_id
+        }`,
         {
-          headers:{
+          headers: {
             api_token: payload.token
           }
         }
-      ).then(dispatch("showPollList",payload));
-      
-      commit("isLoading",false);  
+      ).then(dispatch("showPollList", payload));
+      commit("isButtonActiveFunction", false);
+      commit("isLoading", false);
+      commit("pollArrayId", payload.poll_id);
+    },
+
+    closeOptionState({ commit }, payload) {
+      commit("closeOption", payload);
+    },
+    disableButton({ commit }, payload) {
+      commit("isButtonActiveFunction", payload);
     }
   },
   mutations: {
@@ -166,8 +182,21 @@ export default {
     addPollOption: (state, data) => {
       state.option1 = data.option;
     },
-    clearRow: (state,data)=>{
-      state.rows = data;      
+    clearRow: (state, data) => {
+      state.rows = data;
+    },
+    responseData: (state, data) => {
+      state.response = data.data.data;
+      state.responseError = true;
+    },
+    pollArrayId: (state, data) => {
+      state.pollArray.push(data);
+    },
+    isButtonActiveFunction: (state, payload) => {
+      state.buttonActive = payload;
+    },
+    closeOption: (state, data) => {
+      state.responseError = data;
     }
   }
 };

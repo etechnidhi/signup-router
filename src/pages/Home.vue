@@ -31,6 +31,6 @@ export default {
 
 <style>
 /* .hero.is-primary {
-      height: 100% !important;
-    } */
+          height: 100% !important;
+        } */
 </style>
