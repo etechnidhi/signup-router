@@ -30,7 +30,4 @@ export default {
 </script>
 
 <style>
-/* .hero.is-primary {
-      height: 100% !important;
-    } */
 </style>

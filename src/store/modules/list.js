@@ -19,6 +19,7 @@ export default {
       commit("sucessData", true);
       const responseData = await Axios.get(
         "http://dev.hr.excellencetechnologies.in:8000/list_users",
+        // "http://192.168.1.116:8000/list_users",
         {
           headers: {
             api_token: payload.token

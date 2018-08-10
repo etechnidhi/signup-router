@@ -56,7 +56,6 @@ export default {
         payload.token = response;
 
         const responseData = response.data;
-        // console.log(responseData,"9999999999999999999999999");
         if (responseData.error == 1) {
           commit("login_fail", responseData);
         } else {
@@ -68,6 +67,9 @@ export default {
         commit("login_progress", false);
         commit("login_fail", err);
       }
+    },
+    errorFalse({ commit }, payload) {
+      commit("isErrorFalse", payload.error);
     }
   },
   mutations: {
@@ -98,6 +100,9 @@ export default {
       state.email = val;
       state.password = val;
       state.role = val;
+    },
+    isErrorFalse: (state, data) => {
+      state.error = data;
     }
   }
 };

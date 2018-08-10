@@ -14,8 +14,21 @@
       <div class="field">
         <button class="button is-success" :disabled="errors.any()" v-on:click="loginClick" :class="{ 'button': true, 'is-full' : true, 'is-loading' : login_progress}">Login</button>
       </div>
-      <div class="notification is-danger" v-if="responseError">
-        <button class="delete" @click="closeError"></button> {{this.$store.state.login.responseError}}
+      <!-- Alert Modal  -->
+      <div class="modal" v-bind:class="{ 'is-active': responseError }">
+        <div class="modal-background"></div>
+        <div class="modal-card ">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Alert!</p>
+            <button class="delete" aria-label="close" @click="closeOption"></button>
+          </header>
+          <section class="modal-card-body has-background-danger has-text-white-bis">
+            {{this.$store.state.login.responseError}}
+          </section>
+          <footer class="modal-card-foot">
+            <button class="button" @click="closeOption">OK</button>
+          </footer>
+        </div>
       </div>
     </section>
   </div>
@@ -59,15 +72,17 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["login"]),
+    ...mapActions(["login", "errorFalse"]),
     loginClick: function() {
       this.login({
         email: this.email,
         password: this.password
       });
     },
-    closeError: function() {
-      this.$store.state.login.error = false;
+    closeOption: function() {
+      this.errorFalse({
+        error: false
+      });
     }
   }
 };

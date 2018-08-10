@@ -11,11 +11,7 @@
             </ul>
         </aside>
         <section>
-            <div class="columns">
-                <div class="column">
-                    <ListdisplayPoll/>
-                </div>
-            </div>
+            <ListdisplayPoll/>
         </section>
     </div>
 </template>
@@ -40,7 +36,6 @@ export default {
 
 <style>
 .columns {
-  /* width: 90% !important; */
   margin: 0 auto !important;
 }
 
