@@ -8,16 +8,19 @@ export default {
     title: "",
     options: "",
     response: "",
-    responseError: false,
     progress: false,
+    responseError: false,
     error: false,
     isModalActive: false,
     isLoading: false,
+    isLoadingtitle: false,
     option1: "",
     vote: "",
     rows: [],
     pollArray: [],
-    buttonActive: true
+    buttonActive: true,
+    addedOption: [],
+    invalid:""
   },
   getters: {
     getField,
@@ -27,23 +30,27 @@ export default {
     isLoadingPage: state => (state.isLoading ? true : false),
     isResponseError: state => (state.responseError ? true : false),
     isButtonActive: state => (state.buttonActive ? true : false),
-    getResponse: state => state.response
+    getResponse: state => state.response,
+    isInvalid: state=> state.invalid,
   },
   actions: {
     async showPollList({ commit }, payload) {
       commit("isLoading", true);
       const response = await Axios.get(
         "http://dev.hr.excellencetechnologies.in:8000/list_polls",
-        // "http://192.168.1.116:8000/list_polls",
         {
           headers: {
             api_token: payload.token
           }
         }
       ).then(response => (this.info = response));
-      commit("isLoading", false);
-      response["data"]["data"].reverse();
-      commit("list", response);
+      if(response.data.error == 0){
+        commit("isLoading", false);
+        response["data"]["data"].reverse();
+        commit("list", response);
+      }else{
+        commit("notLogin",response.data)
+      }
     },
 
     async delete({ dispatch, commit }, payload) {
@@ -70,9 +77,8 @@ export default {
       }
     },
 
-    async updateTitle({ dispatch, commit }, payload) {
-      commit("progress", true);
-      commit("isLoading", true);
+    async updateTitle({ commit }, payload) {
+      commit("isLoadingtitle", true);
       const response = await Axios.put(
         `http://dev.hr.excellencetechnologies.in:8000/update_poll_title/${
           payload.pollid
@@ -85,9 +91,9 @@ export default {
             api_token: payload.token
           }
         }
-      ).then(dispatch("showPollList", payload));
-      commit("isLoading", false);
-      commit("progress", false);
+      ).then(response => (this.info = response));
+      commit("updateTitleFunction", response);
+      commit("isLoadingtitle", false);
       this.state.response = response;
     },
 
@@ -95,8 +101,8 @@ export default {
       commit("addRow", payload);
     },
 
-    async submitAddOption({ dispatch, commit }, payload) {
-      commit("isLoading", true);
+    async submitAddOption({ commit }, payload) {
+      // commit("isLoading", true);
       const response = await Axios.post(
         `http://dev.hr.excellencetechnologies.in:8000/add_poll_option/
         ${payload.item.id}`,
@@ -109,10 +115,13 @@ export default {
             api_token: payload.token
           }
         }
-      ).then(dispatch("showPollList", payload));
-      commit("isLoading", false);
+        // ).then(dispatch("showPollList", payload));
+      ).then(response => (this.info = response));
+
+      commit("addOptiontoArray", response.data.data);
+      // commit("isLoading", false);
       commit("clearRow", []);
-      commit("addPollOption", payload);
+      // commit("addPollOption", payload);
       this.state.response = response;
     },
 
@@ -135,8 +144,6 @@ export default {
 
     async submitVote({ dispatch, commit }, payload) {
       commit("isLoading", true);
-      // console.log(state.pollArray,"pollArray");
-      // commit("check",payload.poll_id);
       await Axios.put(
         `http://dev.hr.excellencetechnologies.in:8000/vote/${payload.poll_id}/${
           payload.opt_id
@@ -179,9 +186,6 @@ export default {
       }
       state.rows.push(data);
     },
-    addPollOption: (state, data) => {
-      state.option1 = data.option;
-    },
     clearRow: (state, data) => {
       state.rows = data;
     },
@@ -197,6 +201,28 @@ export default {
     },
     closeOption: (state, data) => {
       state.responseError = data;
+    },
+    updateTitleFunction: (state, val) => {
+      for (let i = 0; i < state.pollList.length; i++) {
+        if (state.pollList[i].id == val.data.data.id) {
+          state.pollList[i].title = val.data.data.title;
+        }
+      }
+    },
+    isLoadingtitle: (state, val) => {
+      state.isLoadingtitle = val;
+    },
+    addOptiontoArray: (state, val) => {
+      for (let i = 0; i < state.pollList.length; i++) {
+        for (let j = 0; j < val.length; j++) {
+          if (state.pollList[i].id == val[j].poll_id) {
+            state.pollList[i].options.push(val[j]);
+          }
+        }
+      }
+    },
+    notLogin: (state,data)=>{
+      state.invalid = data.message;
     }
   }
 };

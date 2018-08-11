@@ -13,11 +13,14 @@ import VueRouter from "vue-router";
 import Bulma from "bulma";
 import VeeValidate from "vee-validate";
 import store from "./store";
+import Spinner from 'vue-spinkit'
+
 
 Vue.use(VeeValidate);
 Vue.use(VueRouter);
 Vue.use(Buefy);
 Vue.use(Bulma);
+Vue.component('Spinner', Spinner);
 
 Vue.config.productionTip = false;
 

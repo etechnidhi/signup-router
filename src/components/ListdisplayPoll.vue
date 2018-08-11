@@ -1,10 +1,14 @@
 <template>
   <section class="section cards" style="position:relative;">
-    <div class="notification is-primary" v-if="isLoadingPage">
-      <button class="delete"></button> Please Wait for a moment! :)
+    <div class="modal" v-bind:class="{ 'is-active': isLoadingPage && isLoggedIn}">
+      <div class="modal-background has-text-center"> </div>
+      <Spinner name="cube-grid" v-bind:class="{ 'is-active': true }" color="	#ff3399" />  
+    </div>
+    <div class="notification is-danger" v-if="!isLoggedIn">
+      <button class="delete"></button> {{this.$store.state.pollList.invalid}} Please login first
     </div>
     <!-- start of list of Polls -->
-    <div class="container" v-if="!isLoadingPage">
+    <div class="container" v-if="!isLoadingPage && isLoggedIn">
       <div class="columns is-multiline">
   
         <div class="column  toaster">
@@ -23,8 +27,10 @@
                       </div>
                       <div class="control">
                         <label class="radio" v-if="item.id == id ? isButtonActive: true">
-                            <input type="radio" v-on:click="enableButton(optionitem)">
-                        </label>Vote {{optionitem.vote}}
+                          <!-- <div id="{{item.id}}"> -->
+                              <input  type="radio" name="radio" :id="optionitem.opt_id" v-on:click="enableButton(optionitem)">
+                          <!-- </div> -->
+                          </label>Vote {{optionitem.vote}}
                         <a href="#" id="deleteOption" class="button is-danger is-small" @click="deletePollOption(item,optionitem)" aria-label="more options">Delete Poll Option</a>
                       </div>
                     </div>
@@ -34,7 +40,7 @@
                     <h1 class="title has-text-danger">Voted SuccessFully</h1>
                   </section>
                 </ul><br/>
-                <a class="button is-primary" :disabled="buttonShow == false" @click="submitPollVote(item)">Submit</a>
+                <a class="button is-primary" :disabled="item.id == buttonShow? false: true" @click="submitPollVote(item)">Submit</a>
               </div>
             </div>
             <footer class="card-footer">
@@ -147,7 +153,9 @@ export default {
       options: [],
       item: [],
       optionid: "",
-      buttonShow: false,
+      buttonShow: "",
+      radioSelected: false,
+      buttonDisable: true,
       optionItemId: "",
       message: "",
       arrayToCheck: []
@@ -163,7 +171,8 @@ export default {
       voteCount: "voteCount",
       isResponseError: "isResponseError",
       isButtonActive: "isButtonActive",
-      getResponse: "getResponse"
+      getResponse: "getResponse",
+      isLoggedIn: "isLoggedIn"
     })
   },
   methods: {
@@ -247,13 +256,35 @@ export default {
         });
     },
     enableButton: function(optionitem) {
+      for (let i = 0; i < this.$store.state.pollList.pollList.length; i++) {
+        for (
+          let j = 0;
+          j < this.$store.state.pollList.pollList[i].options.length;
+          j++
+        ) {
+          if (
+            optionitem.opt_id ==
+            this.$store.state.pollList.pollList[i].options[j].opt_id
+          ) {
+            this.radioSelected = true;
+            this.buttonShow = this.$store.state.pollList.pollList[i].id;
+          }
+        }
+      }
       this.optionItemId = optionitem.opt_id;
-      this.buttonShow = true;
     },
     submitPollVote: function(item) {
       this.arrayToCheck = this.$store.state.pollList.pollArray;
       if (this.arrayToCheck.indexOf(item.id) != -1) {
-        this.buttonShow = false;
+        this.id = item.id;
+        for (let i = 0; i < this.arrayToCheck.length; i++) {
+          for (let j = 0; j < item.options[i].length; j++) {
+            if (this.arrayToCheck[i] == item.options[j].opt_id) {
+              this.buttonShow = this.arrayToCheck[i];
+            }
+          }
+        }
+        this.buttonDisable = false;
         this.disableButton({
           isButtonActive: false
         });

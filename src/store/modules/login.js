@@ -89,6 +89,7 @@ export default {
     },
     logout: state => {
       state.user = {};
+      state.token = "";
     },
     adduser: (state, data) => {
       state.users.push(data);

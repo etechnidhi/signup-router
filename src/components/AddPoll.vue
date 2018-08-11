@@ -54,7 +54,7 @@ export default {
     }
   },
   computed: {
-    ...mapFields(["title", "option"]),
+    ...mapFields(["title", "option"]),  
     ...mapGetters({
       getOptions: "getOptions",
       isSuccess: "isSuccess",
