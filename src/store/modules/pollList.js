@@ -103,7 +103,6 @@ export default {
     },
 
     async submitAddOption({ commit }, payload) {
-      // commit("isLoading", true);
       const response = await Axios.post(
         `http://dev.hr.excellencetechnologies.in:8000/add_poll_option/
         ${payload.item.id}`,
@@ -116,13 +115,10 @@ export default {
             api_token: payload.token
           }
         }
-        // ).then(dispatch("showPollList", payload));
       ).then(response => (this.info = response));
 
       commit("addOptiontoArray", response.data.data);
-      // commit("isLoading", false);
       commit("clearRow", []);
-      // commit("addPollOption", payload);
       this.state.response = response;
     },
 
