@@ -2,6 +2,7 @@ import Axios from "axios";
 import { getField, updateField } from "vuex-map-fields";
 
 export default {
+  namespaced: true,
   state: {
     arrays: [],
     title: "",
@@ -34,11 +35,18 @@ export default {
       ).then(response => (this.info = response));
       commit("addpoll", responseData);
       commit("blankform", []);
+      commit("updateTitle", "");
       commit("login_progress", false);
       commit("success", true);
     },
     rowAdd({ commit }, payload) {
       commit("rowAdd", payload);
+    },
+    removeRow({ commit },payload){
+      commit("removeRowFunction",payload)
+    },
+    updateTitle({commit},payload){
+      commit ("updateTitle",payload);
     }
   },
   mutations: {
@@ -53,8 +61,10 @@ export default {
       state.arrays.push(data);
     },
     blankform: (state, val) => {
-      state.title = "";
       state.rows = val;
+    },
+    updateTitle: (state, val) => {
+      state.title = val;
     },
     success: (state, val) => {
       state.success = val;
@@ -64,6 +74,9 @@ export default {
         state.rows = [];
       }
       state.rows.push(val);
+    },
+    removeRowFunction: (state,val)=>{
+      state.rows.splice(val,1);
     }
   }
 };

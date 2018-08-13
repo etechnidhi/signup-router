@@ -2,6 +2,7 @@ import Axios from "axios";
 import { getField, updateField } from "vuex-map-fields";
 
 export default {
+  namespaced: true,
   state: {
     pollList: [],
     id: "",

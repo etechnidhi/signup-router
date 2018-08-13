@@ -2,7 +2,7 @@
   <section class="section cards" style="position:relative;">
     <div class="modal" v-bind:class="{ 'is-active': isLoadingPage && isLoggedIn}">
       <div class="modal-background has-text-center"> </div>
-      <Spinner name="cube-grid" v-bind:class="{ 'is-active': true }" color="	#ff3399" />  
+      <Spinner name="cube-grid" v-bind:class="{ 'is-active': true }" color="	#ff3399" />
     </div>
     <div class="notification is-danger" v-if="!isLoggedIn">
       <button class="delete"></button> {{this.$store.state.pollList.invalid}} Please login first
@@ -26,21 +26,22 @@
                         <span>{{optionitem.options}}&nbsp; </span>
                       </div>
                       <div class="control">
-                        <label class="radio" v-if="item.id == id ? isButtonActive: true">
-                          <!-- <div id="{{item.id}}"> -->
-                              <input  type="radio" name="radio" :id="optionitem.opt_id" v-on:click="enableButton(optionitem)">
-                          <!-- </div> -->
-                          </label>Vote {{optionitem.vote}}
+                        <label class="radio" v-if="item.id == Votedid ? isButtonActive: true">
+                            <input  type="radio" name="radio" :id="optionitem.opt_id" v-on:click="enableButton(optionitem)">
+                        </label>Vote {{optionitem.vote}}
                         <a href="#" id="deleteOption" class="button is-danger is-small" @click="deletePollOption(item,optionitem)" aria-label="more options">Delete Poll Option</a>
                       </div>
                     </div>
                   </li>
                   <br/>
-                  <section class="hero body" v-if="item.id == id ? !isButtonActive: false">
+                  <section class="hero body" v-if="item.id == Votedid ? !isButtonActive: false">
                     <h1 class="title has-text-danger">Voted SuccessFully</h1>
                   </section>
+                  <section class="hero body" v-if=" item.id == buttonDisable? showVoted :false">
+                    <h1 class="title has-text-danger">You have already voted on this Poll</h1>
+                  </section>
                 </ul><br/>
-                <a class="button is-primary" :disabled="item.id == buttonShow? false: true" @click="submitPollVote(item)">Submit</a>
+                <a class="button is-primary" :disabled="item.id == buttonShow? false: true || item.id == buttonDisable? true:false" @click="submitPollVote(item)">Submit</a>
               </div>
             </div>
             <footer class="card-footer">
@@ -70,7 +71,7 @@
           </div>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-success" @click="updateSave">Save changes</button>
+          <button class="button is-success" @click="updateSave(title)">Save changes</button>
           <button class="button" @click="close">Cancel</button>
         </footer>
       </div>
@@ -157,26 +158,29 @@ export default {
       radioSelected: false,
       buttonDisable: true,
       optionItemId: "",
+      parentId: "",
       message: "",
-      arrayToCheck: []
+      arrayToCheck: [],
+      showVoted: false,
+      Votedid:""
     };
   },
   computed: {
     ...mapFields(["option1"]),
     ...mapGetters({
-      poll: "poll",
-      progressbar: "progressbar",
-      isLoadingPage: "isLoadingPage",
-      pollOption: "pollOption",
+      poll: "pollList/poll",
+      progressbar: "pollList/progressbar",
+      isLoadingPage: "pollList/isLoadingPage",
+      pollOption: "pollList/pollOption",
       voteCount: "voteCount",
-      isResponseError: "isResponseError",
-      isButtonActive: "isButtonActive",
+      isResponseError: "pollList/isResponseError",
+      isButtonActive: "pollList/isButtonActive",
       getResponse: "getResponse",
       isLoggedIn: "isLoggedIn"
     })
   },
   methods: {
-    ...mapActions([
+    ...mapActions('pollList',[
       "showPollList",
       "delete",
       "updateTitle",
@@ -218,7 +222,6 @@ export default {
     },
     addoption: function(item) {
       this.item = item;
-      this.id = item.id;
       this.title = item.title;
       this.isModalOptionActive = true;
       this.options = item.options;
@@ -247,15 +250,16 @@ export default {
     },
     deletePollOption: function(item, deletePollOption) {
       (this.optionid = deletePollOption.opt_id),
-        (this.id = item.id),
+        // (this.id = item.id),
         this.deletePollOptionLink({
           token: this.$store.state.login.token,
           title: this.title,
-          id: this.id,
+          id: item.id,
           opt_id: this.optionid
         });
     },
     enableButton: function(optionitem) {
+      this.arrayToCheck = this.$store.state.pollList.pollArray;
       for (let i = 0; i < this.$store.state.pollList.pollList.length; i++) {
         for (
           let j = 0;
@@ -266,32 +270,32 @@ export default {
             optionitem.opt_id ==
             this.$store.state.pollList.pollList[i].options[j].opt_id
           ) {
-            this.radioSelected = true;
-            this.buttonShow = this.$store.state.pollList.pollList[i].id;
+            this.parentId = this.$store.state.pollList.pollList[i].id;
+            if (this.arrayToCheck.indexOf(this.parentId) != -1) {
+              this.buttonDisable = this.$store.state.pollList.pollList[i].id;
+              this.radioSelected = false;
+              this.showVoted = true;
+            } else {
+              this.radioSelected = true;
+              this.buttonShow = this.$store.state.pollList.pollList[i].id;
+            }
           }
         }
       }
       this.optionItemId = optionitem.opt_id;
     },
     submitPollVote: function(item) {
+
       this.arrayToCheck = this.$store.state.pollList.pollArray;
       if (this.arrayToCheck.indexOf(item.id) != -1) {
-        this.id = item.id;
-        for (let i = 0; i < this.arrayToCheck.length; i++) {
-          for (let j = 0; j < item.options[i].length; j++) {
-            if (this.arrayToCheck[i] == item.options[j].opt_id) {
-              this.buttonShow = this.arrayToCheck[i];
-            }
-          }
-        }
-        this.buttonDisable = false;
+        this.Votedid = item.id;
         this.disableButton({
           isButtonActive: false
         });
       } else {
-        this.id = item.id;
+        this.Votedid = item.id;
         this.submitVote({
-          poll_id: this.id,
+          poll_id: this.Votedid,
           opt_id: this.optionItemId,
           token: this.$store.state.login.token
         });

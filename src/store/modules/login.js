@@ -17,7 +17,7 @@ export default {
   },
   getters: {
     getField,
-    getUser: state => state.user,
+    getUser:state => state.user,
     responseError: state => (state.error ? true : false),
     isLoggedIn: state => (state.user.email ? true : false)
   },
