@@ -4,15 +4,15 @@ import { getField, updateField } from "vuex-map-fields";
 export default {
   namespaced: true,
   state: {
-    arrays: [],
-    title: "",
-    rows: [
+    arrays: [], //poll's title and options array
+    title: "",  //poll's title
+    rows: [     //array of options
       {
         option: ""
       }
     ],
-    login_progress: false,
-    success: false
+    login_progress: false,  //shows the progress of the button while api is working
+    success: false //when api done its work then it will help to move in next page
   },
   getters: {
     getOptions: state => state.option,

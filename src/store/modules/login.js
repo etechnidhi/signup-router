@@ -3,17 +3,17 @@ import { getField, updateField } from "vuex-map-fields";
 
 export default {
   state: {
-    users: [],
-    id: "",
-    name: "",
-    email: "",
-    password: "",
-    role: "",
-    user: {},
-    token: "",
-    error: false,
-    responseError: "",
-    login_progress: false
+    users: [], //array of users
+    id: "",   //id of user
+    name: "", //name of user
+    email: "",  //email of user
+    password: "", //password of user
+    role: "", //role of user
+    user: {}, //object of user that contains the email,id,password,role
+    token: "",  //token of api  
+    error: false, //when api gives error
+    responseError: "", //the response of error
+    login_progress: false //shows the login progress 
   },
   getters: {
     getField,

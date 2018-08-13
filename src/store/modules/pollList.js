@@ -4,24 +4,19 @@ import { getField, updateField } from "vuex-map-fields";
 export default {
   namespaced: true,
   state: {
-    pollList: [],
-    id: "",
-    title: "",
-    options: "",
-    response: "",
-    progress: false,
-    responseError: false,
-    error: false,
-    isModalActive: false,
-    isLoading: false,
-    isLoadingtitle: false,
-    option1: "",
-    vote: "",
-    rows: [],
-    pollArray: [],
-    buttonActive: true,
-    addedOption: [],
-    invalid:""
+    pollList: [],      //array of poll List
+    id: "",    // id of poll
+    title: "",    //title of poll
+    options: "",      //string of options of poll
+    response: "",     //contain the response of api
+    progress: false,      // progress is for page loader
+    responseError: false,     //contain the error module and other to be true or false
+    isLoading: false,     //set the loadder true or false
+    isLoadingtitle: false,     //when title is updating
+    rows: [],     //array of rows of options to be added
+    pollArray: [],    //contain the array of poll that is voted
+    buttonActive: true,    //making button able or disable
+    invalid:""    //set the message of not login 
   },
   getters: {
     getField,
@@ -74,7 +69,6 @@ export default {
         this.response = response;
       } catch (err) {
         commit("progress", false);
-        commit("login_fail", err);
       }
     },
 
@@ -167,9 +161,6 @@ export default {
     updateField,
     list: (state, data) => {
       state.pollList = data.data.data;
-    },
-    login_fail: (state, data) => {
-      state.error = data;
     },
     progress: (state, data) => {
       state.progress = data;
