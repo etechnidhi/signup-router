@@ -4,30 +4,22 @@ import { getField, updateField } from "vuex-map-fields";
 export default {
   namespaced: true,
   state: {
-    pollList: [],      //array of poll List
-    id: "",    // id of poll
-    title: "",    //title of poll
-    options: "",      //string of options of poll
-    response: "",     //contain the response of api
-    progress: false,      // progress is for page loader
-    responseError: false,     //contain the error module and other to be true or false
-    isLoading: false,     //set the loadder true or false
-    isLoadingtitle: false,     //when title is updating
-    rows: [],     //array of rows of options to be added
-    pollArray: [],    //contain the array of poll that is voted
-    buttonActive: true,    //making button able or disable
-    invalid:""    //set the message of not login 
+    pollList: [], //array of poll List
+    response: "", //contain the response of api
+    responseError: false, //contain the error module and other to be true or false
+    isLoading: false, //set the loadder true or false
+    optionRows: [], //array of rows of options to be added
+    pollVotedArray: [], //contain the array of poll that is voted
+    buttonActive: true //making button able or disable
   },
   getters: {
     getField,
     poll: state => state.pollList,
-    pollOption: state => state.rows,
-    progressbar: state => (state.progress ? true : false),
+    pollOption: state => state.optionRows,
     isLoadingPage: state => (state.isLoading ? true : false),
     isResponseError: state => (state.responseError ? true : false),
     isButtonActive: state => (state.buttonActive ? true : false),
     getResponse: state => state.response,
-    isInvalid: state=> state.invalid,
   },
   actions: {
     async showPollList({ commit }, payload) {
@@ -40,40 +32,33 @@ export default {
           }
         }
       ).then(response => (this.info = response));
-      if(response.data.error == 0){
+      if (response.data.error == 0) {
         commit("isLoading", false);
         response["data"]["data"].reverse();
         commit("list", response);
-      }else{
-        commit("notLogin",response.data)
+      } else {
+        commit("notLogin", response.data);
       }
     },
 
     async delete({ dispatch, commit }, payload) {
-      try {
-        commit("progress", true);
-        commit("isLoading", true);
-        const response = await Axios.delete(
-          `http://dev.hr.excellencetechnologies.in:8000/delete_poll/${
-            payload.pollid
-          }`,
-          {
-            headers: {
-              api_token: payload.token
-            }
+      commit("isLoading", true);
+      const response = await Axios.delete(
+        `http://dev.hr.excellencetechnologies.in:8000/delete_poll/${
+          payload.pollid
+        }`,
+        {
+          headers: {
+            api_token: payload.token
           }
-        ).then(dispatch("showPollList", payload));
-        commit("responseData", response);
-        commit("isLoading", false);
-        commit("progress", false);
-        this.response = response;
-      } catch (err) {
-        commit("progress", false);
-      }
+        }
+      ).then(dispatch("showPollList", payload));
+      commit("responseData", response.data.data);
+      commit("isLoading", false);
     },
 
     async updateTitle({ commit }, payload) {
-      commit("isLoadingtitle", true);
+      commit("isLoading", true);
       const response = await Axios.put(
         `http://dev.hr.excellencetechnologies.in:8000/update_poll_title/${
           payload.pollid
@@ -88,8 +73,7 @@ export default {
         }
       ).then(response => (this.info = response));
       commit("updateTitleFunction", response);
-      commit("isLoadingtitle", false);
-      this.state.response = response;
+      commit("isLoading", false);
     },
 
     async optionRowAdd({ commit }, payload) {
@@ -110,10 +94,12 @@ export default {
           }
         }
       ).then(response => (this.info = response));
-
-      commit("addOptiontoArray", response.data.data);
-      commit("clearRow", []);
-      this.state.response = response;
+      if (response.data.error == 1) {
+        commit("responseData", response.data.message);
+      } else {
+        commit("addOptiontoArray", response.data.data);
+        commit("clearRow", []);
+      }
     },
 
     async deletePollOptionLink({ dispatch, commit }, payload) {
@@ -128,7 +114,7 @@ export default {
           }
         }
       ).then(dispatch("showPollList", payload));
-      commit("responseData", response);
+      commit("responseData", response.data.data);
       commit("buttonActive", true);
       commit("isLoading", false);
     },
@@ -155,6 +141,9 @@ export default {
     },
     disableButton({ commit }, payload) {
       commit("isButtonActiveFunction", payload);
+    },
+    removeRow({ commit }, payload) {
+      commit("removeRow", payload);
     }
   },
   mutations: {
@@ -162,27 +151,27 @@ export default {
     list: (state, data) => {
       state.pollList = data.data.data;
     },
-    progress: (state, data) => {
-      state.progress = data;
-    },
     isLoading: (state, data) => {
       state.isLoading = data;
     },
     addRow: (state, data) => {
-      if (!state.rows.length) {
-        state.rows = [];
+      if (!state.optionRows.length) {
+        state.optionRows = [];
       }
-      state.rows.push(data);
+      state.optionRows.push(data);
+    },
+    removeRow: (state, data) => {
+      state.optionRows.splice(data.index, 1);
     },
     clearRow: (state, data) => {
-      state.rows = data;
+      state.optionRows = data;
     },
     responseData: (state, data) => {
-      state.response = data.data.data;
+      state.response = data;
       state.responseError = true;
     },
     pollArrayId: (state, data) => {
-      state.pollArray.push(data);
+      state.pollVotedArray.push(data);
     },
     isButtonActiveFunction: (state, payload) => {
       state.buttonActive = payload;
@@ -197,9 +186,6 @@ export default {
         }
       }
     },
-    isLoadingtitle: (state, val) => {
-      state.isLoadingtitle = val;
-    },
     addOptiontoArray: (state, val) => {
       for (let i = 0; i < state.pollList.length; i++) {
         for (let j = 0; j < val.length; j++) {
@@ -208,9 +194,6 @@ export default {
           }
         }
       }
-    },
-    notLogin: (state,data)=>{
-      state.invalid = data.message;
     }
   }
 };

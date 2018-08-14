@@ -4,11 +4,11 @@ import { getField, updateField } from "vuex-map-fields";
 export default {
   state: {
     users: [], //array of users
-    id: "",   //id of user
-    name: "", //name of user
-    email: "",  //email of user
-    password: "", //password of user
-    role: "", //role of user
+    // id: "",   //id of user
+    // name: "", //name of user
+    // email: "",  //email of user
+    // password: "", //password of user
+    // role: "", //role of user
     user: {}, //object of user that contains the email,id,password,role
     token: "",  //token of api  
     error: false, //when api gives error

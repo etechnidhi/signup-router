@@ -4,9 +4,6 @@
       <div class="modal-background has-text-center"> </div>
       <Spinner name="cube-grid" v-bind:class="{ 'is-active': true }" color="	#ff3399" />
     </div>
-    <div class="notification is-danger" v-if="!isLoggedIn">
-      <button class="delete"></button> {{this.$store.state.pollList.invalid}} Please login first
-    </div>
     <!-- start of list of Polls -->
     <div class="container" v-if="!isLoadingPage && isLoggedIn">
       <div class="columns is-multiline">
@@ -158,8 +155,6 @@ export default {
       radioSelected: false,
       buttonDisable: true,
       optionItemId: "",
-      parentId: "",
-      message: "",
       arrayToCheck: [],
       showVoted: false,
       Votedid:""
@@ -169,13 +164,10 @@ export default {
     ...mapFields(["option1"]),
     ...mapGetters({
       poll: "pollList/poll",
-      progressbar: "pollList/progressbar",
       isLoadingPage: "pollList/isLoadingPage",
       pollOption: "pollList/pollOption",
-      voteCount: "voteCount",
       isResponseError: "pollList/isResponseError",
       isButtonActive: "pollList/isButtonActive",
-      getResponse: "getResponse",
       isLoggedIn: "isLoggedIn"
     })
   },
@@ -188,8 +180,8 @@ export default {
       "submitAddOption",
       "deletePollOptionLink",
       "submitVote",
-      "responseDataPoll",
-      "disableButton"
+      "disableButton",
+      "removeRow"
     ]),
     displayList: function() {
       this.showPollList({
@@ -236,21 +228,22 @@ export default {
       });
     },
     removeElement: function(index) {
-      this.$store.state.pollList.rows.splice(index, 1);
+      this.removeRow({
+        index:index,
+      })
     },
     updateSaveOption: function(itemOption, title) {
       this.title = title;
       this.submitAddOption({
         token: this.$store.state.login.token,
         title: this.title,
-        options: this.$store.state.pollList.rows,
+        options: this.$store.state.pollList.optionRows,
         item: this.item
       });
       this.isModalOptionActive = false;
     },
     deletePollOption: function(item, deletePollOption) {
       (this.optionid = deletePollOption.opt_id),
-        // (this.id = item.id),
         this.deletePollOptionLink({
           token: this.$store.state.login.token,
           title: this.title,
@@ -270,8 +263,8 @@ export default {
             optionitem.opt_id ==
             this.$store.state.pollList.pollList[i].options[j].opt_id
           ) {
-            this.parentId = this.$store.state.pollList.pollList[i].id;
-            if (this.arrayToCheck.indexOf(this.parentId) != -1) {
+            // this.parentId = this.$store.state.pollList.pollList[i].id;
+            if (this.arrayToCheck.indexOf(this.$store.state.pollList.pollList[i].id) != -1) {
               this.buttonDisable = this.$store.state.pollList.pollList[i].id;
               this.radioSelected = false;
               this.showVoted = true;
@@ -303,7 +296,12 @@ export default {
     }
   },
   beforeMount() {
-    this.displayList();
+    if (this.$store.state.login.token) {
+      this.displayList();
+    } else {
+      this.$router.push("login");
+    }
+    
   }
 };
 </script>
