@@ -54,12 +54,20 @@ export default {
     }
   },
   computed: {
-    ...mapFields(["title"]),
+    ...mapFields(["option"]),
     ...mapGetters({
-      getOptions: "getOptions",
-      isSuccess: "isSuccess",
-      getRows: "getRows"
+      getOptions: "addpoll/getOptions",
+      isSuccess: "addpoll/isSuccess",
+      getRows: "addpoll/getRows"
     }),
+    title: {
+      get: function() {
+        return this.$store.state.addpoll.title;
+      },
+      set: function(val) {
+        this.$store.commit("addpoll/updateTitle", val);
+      }
+    },
     login_progress: function() {
       return this.$store.state.login.login_progress;
     },
@@ -68,7 +76,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["addpoll", "rowAdd"]),
+    ...mapActions('addpoll',[
+      "addpoll",
+      "rowAdd",
+      "removeRow"
+    ]),
     addPollSubmit: function() {
       this.addpoll({
         token: this.$store.state.login.token,
@@ -77,12 +89,14 @@ export default {
       });
     },
     addRow: function() {
-      this.rowAdd({
+      return this.rowAdd({
         option: this.$store.state.addpoll.item
       });
     },
     removeElement: function(index) {
-      this.$store.state.addpoll.rows.splice(index, 1);
+      this.removeRow({
+        index: index
+      });
     }
   }
 };

@@ -2,13 +2,12 @@ import Axios from "axios";
 
 export default {
   state: {
-    userslist: [],
-    id: "",
-    name: "",
-    email: "",
-    role: "",
-    userlistObject: {},
-    success: false
+    userslist: [], //list of users array
+    id: "",     // id of user
+    name: "",   // name of user
+    email: "",  //email of user
+    role: "", //role of user 
+    success: false  //when api successfully committed then this will be true and shows the list of users
   },
   getters: {
     getList: state => state.userslist,
@@ -19,6 +18,7 @@ export default {
       commit("sucessData", true);
       const responseData = await Axios.get(
         "http://dev.hr.excellencetechnologies.in:8000/list_users",
+        // "http://192.168.1.116:8000/list_users",
         {
           headers: {
             api_token: payload.token
@@ -27,8 +27,6 @@ export default {
       ).then(response => (this.info = response));
       commit("sucessData", false);
       commit("list", responseData);
-      // this.state.userslist = responseData.data.data;
-      this.state.userlistObject = true;
     }
   },
   mutations: {

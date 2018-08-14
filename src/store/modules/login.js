@@ -3,21 +3,21 @@ import { getField, updateField } from "vuex-map-fields";
 
 export default {
   state: {
-    users: [],
-    id: "",
-    name: "",
-    email: "",
-    password: "",
-    role: "",
-    user: {},
-    token: "",
-    error: false,
-    responseError: "",
-    login_progress: false
+    users: [], //array of users
+    // id: "",   //id of user
+    // name: "", //name of user
+    // email: "",  //email of user
+    // password: "", //password of user
+    // role: "", //role of user
+    user: {}, //object of user that contains the email,id,password,role
+    token: "",  //token of api  
+    error: false, //when api gives error
+    responseError: "", //the response of error
+    login_progress: false //shows the login progress 
   },
   getters: {
     getField,
-    getUser: state => state.user,
+    getUser:state => state.user,
     responseError: state => (state.error ? true : false),
     isLoggedIn: state => (state.user.email ? true : false)
   },
@@ -56,7 +56,6 @@ export default {
         payload.token = response;
 
         const responseData = response.data;
-        // console.log(responseData,"9999999999999999999999999");
         if (responseData.error == 1) {
           commit("login_fail", responseData);
         } else {
@@ -68,6 +67,9 @@ export default {
         commit("login_progress", false);
         commit("login_fail", err);
       }
+    },
+    errorFalse({ commit }, payload) {
+      commit("isErrorFalse", payload.error);
     }
   },
   mutations: {
@@ -87,6 +89,7 @@ export default {
     },
     logout: state => {
       state.user = {};
+      state.token = "";
     },
     adduser: (state, data) => {
       state.users.push(data);
@@ -98,6 +101,9 @@ export default {
       state.email = val;
       state.password = val;
       state.role = val;
+    },
+    isErrorFalse: (state, data) => {
+      state.error = data;
     }
   }
 };

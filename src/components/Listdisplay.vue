@@ -1,12 +1,15 @@
 <template>
   <section>
-    <div class="notification is-primary" v-if="successPage">
-      <button class="delete"></button> Please Wait for a moment! :)
+    <div class="modal" v-bind:class="{ 'is-active': successPage && isLoggedIn}">
+      <div class="modal-background has-text-center"> </div>
+      <Spinner name="cube-grid" v-bind:class="{ 'is-active': true }" color="	#ff3399" />
+    </div>
+    <div class="notification is-danger" v-if="!isLoggedIn">
+      <button class="delete"></button> {{this.$store.state.pollList.invalid}} Please login first
     </div>
     <table class="table is-striped is-hoverable is-fullwidth" :items="getList" v-if="!successPage">
       <thead>
         <tr>
-          <!-- <th>Id</th> -->
           <th>UserName</th>
           <th>Email</th>
           <th>Role</th>
@@ -14,7 +17,6 @@
       </thead>
       <tbody>
         <tr v-for="(item,index) in getList" :key="index ">
-          <!-- <th>{{index+1}}</th> -->
           <td>{{item.name}}</td>
           <td>{{item.email}}</td>
           <td>{{item.role}}</td>
@@ -32,7 +34,8 @@ export default {
   computed: {
     ...mapGetters({
       getList: "getList",
-      successPage: "successPage"
+      successPage: "successPage",
+      isLoggedIn: "isLoggedIn"
     })
   },
   methods: {
@@ -44,7 +47,11 @@ export default {
     }
   },
   beforeMount() {
-    this.showlistDisplay();
+    if (this.$store.state.login.token) {
+      this.showlistDisplay();
+    } else {
+      this.$router.push("login");
+    }
   }
 };
 </script>
